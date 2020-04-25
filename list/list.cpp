@@ -37,8 +37,6 @@
       return !(*this == comp);
     }
 
-  // Specific member functions
-
 // CLASS LIST
   // Copy constructor
     template <typename Data>
