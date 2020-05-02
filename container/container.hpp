@@ -79,7 +79,6 @@ namespace lasd {
     /* ************************************************************************ */
 
     // Specific member functions
-
     virtual Data& Front() const = 0; //Il dato può essere modificato ma il contenitore del dato no.
     virtual Data& Back() const = 0; //Il dato può essere modificato ma il contenitore del dato no.
 
@@ -118,7 +117,6 @@ namespace lasd {
     /* ************************************************************************ */
 
     // Specific member functions
-
     virtual bool Exists(const Data&) const noexcept = 0;
 
   };
@@ -154,7 +152,6 @@ namespace lasd {
     /* ************************************************************************ */
 
     // Specific member functions
-
     typedef void (*MapFunctor)(Data&, void*);
     // typedef std::function<void(Data&, void*)> MapFunctor;
     virtual void MapPreOrder(MapFunctor, void*) = 0;
@@ -168,6 +165,45 @@ namespace lasd {
     virtual bool Exists(const Data&) const noexcept override; // Override TestableContainer member
 
   };
+
+/* ************************************************************************** */
+
+template <typename Data>
+class BreadthSearchableContainer : virtual public SearchableContainer<Data> { // Should extend SearchableContainer<Data>
+
+private:
+
+protected:
+
+public:
+
+  // Destructor
+  virtual ~BreadthSearchableContainer() = default;
+
+  /* ************************************************************************ */
+
+  // Copy assignment
+  BreadthSearchableContainer& operator=(const BreadthSearchableContainer&) = delete; // Copy assignment of abstract types should not be possible.
+
+  // Move assignment
+  BreadthSearchableContainer& operator=(BreadthSearchableContainer&&) = delete; // Move assignment of abstract types should not be possible.
+
+  /* ************************************************************************ */
+
+  // Comparison operators
+  bool operator==(const BreadthSearchableContainer&) const noexcept = delete; // Comparison of abstract types might not be possible.
+  bool operator!=(const BreadthSearchableContainer&) const noexcept = delete; // Comparison of abstract types might not be possible.
+
+  /* ************************************************************************ */
+
+  // Specific member functions
+  using typename SearchableContainer<Data>::MapFunctor;
+  virtual void MapBreadth(MapFunctor, void*) = 0;
+
+  using typename SearchableContainer<Data>::FoldFunctor;
+  virtual void FoldBreadth(FoldFunctor, const void*, void*) const =  0;
+
+};
 
 /* ************************************************************************** */
 
