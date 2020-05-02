@@ -23,6 +23,7 @@ private:
 protected:
 
   using BinaryTree<Data>::size;
+  ulong treeHeight = 0;
 
 public:
 
@@ -79,7 +80,7 @@ public:
 
 protected:
 
-  Vector<struct NodeVec> treeVec = new Vector<struct NodeVec>(6);
+  Vector<struct NodeVec> *treeVec = nullptr;
 
   /* ************************************************************************ */
 
