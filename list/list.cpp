@@ -259,38 +259,38 @@
 
     //OVERLOAD Accessory Function
 
-      template <typename Data>
-      void List<Data>::MapPreOrder(MapFunctor function, void* par, struct Node* node){
-        if(node == nullptr)
-          return;
+    template <typename Data>
+    void List<Data>::MapPreOrder(MapFunctor function, void* par, struct Node* node){
+      if(node == nullptr)
+        return;
 
-        function(node->value, par);
-        MapPreOrder(function, par, node->next);
-      }
+      function(node->value, par);
+      MapPreOrder(function, par, node->next);
+    }
 
-      template <typename Data>
-      void List<Data>::MapPostOrder(MapFunctor function, void* par, struct Node* node){
-        if(node == nullptr)
-          return;
+    template <typename Data>
+    void List<Data>::MapPostOrder(MapFunctor function, void* par, struct Node* node){
+      if(node == nullptr)
+        return;
 
-        MapPostOrder(function, par, node->next);
-        function(node->value, par);
-      }
+      MapPostOrder(function, par, node->next);
+      function(node->value, par);
+    }
 
-      template <typename Data>
-      void List<Data>::FoldPreOrder(FoldFunctor function, const void* constPar, void* par, struct Node* node) const{
-        if(node == nullptr)
-          return;
+    template <typename Data>
+    void List<Data>::FoldPreOrder(FoldFunctor function, const void* constPar, void* par, struct Node* node) const{
+      if(node == nullptr)
+        return;
 
-        function(node->value, constPar, par);
-        FoldPreOrder(function, constPar, par, node->next);
-      }
+      function(node->value, constPar, par);
+      FoldPreOrder(function, constPar, par, node->next);
+    }
 
-      template <typename Data>
-      void List<Data>::FoldPostOrder(FoldFunctor function, const void* constPar, void* par, struct Node* node) const{
-        if(node == nullptr)
-          return;
+    template <typename Data>
+    void List<Data>::FoldPostOrder(FoldFunctor function, const void* constPar, void* par, struct Node* node) const{
+      if(node == nullptr)
+        return;
 
-        FoldPostOrder(function, constPar, par, node->next);
-        function(node->value, constPar, par);
-      }
+      FoldPostOrder(function, constPar, par, node->next);
+      function(node->value, constPar, par);
+    }
