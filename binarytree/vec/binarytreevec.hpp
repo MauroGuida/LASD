@@ -24,6 +24,7 @@ protected:
 
   using BinaryTree<Data>::size;
   ulong treeHeight = 0;
+  Vector<ulong> heightVector;
 
 public:
 
@@ -80,7 +81,7 @@ public:
 
 protected:
 
-  Vector<struct NodeVec> *treeVec = nullptr;
+  Vector<struct NodeVec> treeVec;
 
   /* ************************************************************************ */
 
@@ -125,13 +126,13 @@ public:
   void NewRoot(const Data&) override; // Override Node member (Copy of the value)
   void NewRoot(Data&&) override; // Override Node member (Move of the value)
 
-  void AddLeftChild(struct NodeVec&, Data&); // Add a child to a given node (Copy of the value)
-  void AddLeftChild(struct NodeVec&, Data&&); // Add a child to a given node (Move of the value)
-  void AddRightChild(struct NodeVec&, Data&); // Add a child to a given node (Copy of the value)
-  void AddRightChild(struct NodeVec&, Data&&); // Add a child to a given node (Move of the value)
+  void AddLeftChild(const struct NodeVec&, const Data&); // Add a child to a given node (Copy of the value)
+  void AddLeftChild(const struct NodeVec&, Data&&); // Add a child to a given node (Move of the value)
+  void AddRightChild(const struct NodeVec&, const Data&); // Add a child to a given node (Copy of the value)
+  void AddRightChild(const struct NodeVec&, Data&&); // Add a child to a given node (Move of the value)
 
-  void RemoveLeftChild(struct NodeVec&); // Remove an entire subtree rooted in a child of a given node
-  void RemoveRightChild(struct NodeVec&); // Remove an entire subtree rooted in a child of a given node
+  void RemoveLeftChild(const struct NodeVec&); // Remove an entire subtree rooted in a child of a given node
+  void RemoveRightChild(const struct NodeVec&); // Remove an entire subtree rooted in a child of a given node
 
   /* ************************************************************************ */
 

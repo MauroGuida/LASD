@@ -117,31 +117,21 @@ public:
   /* ************************************************************************ */
 
   // Specific member functions (inherited from SearchableContainer)
-  public:
   using typename SearchableContainer<Data>::MapFunctor;
   void MapPreOrder(MapFunctor, void*) override; // Override SearchableContainer member
   void MapPostOrder(MapFunctor, void*) override; // Override SearchableContainer member
-    private:
-      void RecursiveMapPostOrder(struct Node*, MapFunctor, void*);
 
-  public:
   using typename SearchableContainer<Data>::FoldFunctor;
   void FoldPreOrder(FoldFunctor, const void*, void*) const override; // Override SearchableContainer member
   void FoldPostOrder(FoldFunctor, const void*, void*) const override; // Override SearchableContainer member
-    private:
-      void RecursiveFoldPostOrder(struct Node*, FoldFunctor, const void*, void*) const;
 
   protected:
   void MapPreOrder(MapFunctor, void*, struct Node*); // Accessory function executing from one point of the list onwards
   void MapPostOrder(MapFunctor, void*, struct Node*); // Accessory function executing from one point of the list onwards
-    private:
-      void RecursiveMapPostOrder(struct Node *, MapFunctor, void*, struct Node*);
 
-  protected:
   void FoldPreOrder(FoldFunctor, const void*, void*, struct Node*) const; // Accessory function executing from one point of the list onwards
   void FoldPostOrder(FoldFunctor, const void*, void*, struct Node*) const; // Accessory function executing from one point of the list onwards
-    private:
-      void RecursiveFoldPostOrder(struct Node *, FoldFunctor, const void*, void*, struct Node*);
+
 };
 
 /* ************************************************************************** */

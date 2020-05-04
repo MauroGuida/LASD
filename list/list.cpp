@@ -239,100 +239,58 @@
 
     template <typename Data>
     void List<Data>::MapPreOrder(MapFunctor function, void* par){
-      struct Node* tmp = head;
-      while(tmp != nullptr){
-          function(tmp->value, par);
-          tmp=tmp->next;
-      }
+      MapPreOrder(function, par, head);
     }
 
-    //Ricorsivo
     template <typename Data>
     void List<Data>::MapPostOrder(MapFunctor function, void* par){
-      // for(ulong i=size-1; i>=0 && i < size; i--)
-      //   function((*this)[i], par);
-      RecursiveMapPostOrder(head, function, par);
+      MapPostOrder(function, par, head);
     }
-
-      template <typename Data>
-      void List<Data>::RecursiveMapPostOrder(struct Node* nodo, MapFunctor function, void* par){
-        if (nodo != nullptr){
-          RecursiveMapPostOrder(nodo->next, function, par);
-          function(nodo->value, par);
-        }
-      }
 
     template <typename Data>
     void List<Data>::FoldPreOrder(FoldFunctor function, const void* constPar, void* par) const{
-      struct Node* tmp = head;
-      while(tmp != nullptr){
-          function(tmp->value, constPar, par);
-          tmp=tmp->next;
-      }
+      FoldPreOrder(function, constPar, par, head);
     }
 
-    //Ricorsivo
     template <typename Data>
     void List<Data>::FoldPostOrder(FoldFunctor function, const void* constPar, void* par) const{
-      // for(ulong i=size-1; i>=0 && i < size; i--)
-      //   function((*this)[i], constPar, par);
-      RecursiveFoldPostOrder(head, function, constPar, par);
+      FoldPostOrder(function, constPar, par, head);
     }
-
-      template <typename Data>
-      void List<Data>::RecursiveFoldPostOrder(struct Node* nodo, FoldFunctor function, const void* constPar, void* par) const{
-        if (nodo != nullptr){
-          RecursiveFoldPostOrder(nodo->next, function, constPar, par);
-          function(nodo->value, constPar, par);
-        }
-      }
 
     //OVERLOAD Accessory Function
 
       template <typename Data>
       void List<Data>::MapPreOrder(MapFunctor function, void* par, struct Node* node){
-        while(node != nullptr){
-          function(node->value, par);
-          node = node->next;
-        }
+        if(node == nullptr)
+          return;
+
+        function(node->value, par);
+        MapPreOrder(function, par, node->next);
       }
 
-      //Ricorsivo
       template <typename Data>
       void List<Data>::MapPostOrder(MapFunctor function, void* par, struct Node* node){
-        RecursiveMapPostOrder(head, function, par, node);
-      }
+        if(node == nullptr)
+          return;
 
-        template <typename Data>
-        void List<Data>::RecursiveMapPostOrder(struct Node * scrollNode, MapFunctor function, void* par, struct Node* node){
-          if(scrollNode == node){
-            function(scrollNode->value, par);
-          }else if(scrollNode != node){
-            RecursiveMapPostOrder(scrollNode->next, function, par, node);
-            function(scrollNode->value, par);
-          }
-        }
+        MapPostOrder(function, par, node->next);
+        function(node->value, par);
+      }
 
       template <typename Data>
-      void List<Data>::FoldPreOrder(FoldFunctor functor, const void* constPar, void* par, struct Node* node) const{
-        while(node != nullptr){
-          function(node->value, constPar, par);
-          node = node->next;
-        }
+      void List<Data>::FoldPreOrder(FoldFunctor function, const void* constPar, void* par, struct Node* node) const{
+        if(node == nullptr)
+          return;
+
+        function(node->value, constPar, par);
+        FoldPreOrder(function, constPar, par, node->next);
       }
 
-      //Ricorsivo
       template <typename Data>
       void List<Data>::FoldPostOrder(FoldFunctor function, const void* constPar, void* par, struct Node* node) const{
-        RecursiveFoldPostOrder(head, function, constPar, par, node);
-      }
+        if(node == nullptr)
+          return;
 
-        template <typename Data>
-        void List<Data>::RecursiveFoldPostOrder(struct Node * scrollNode, FoldFunctor function, const void* constPar, void* par, struct Node* node){
-          if(scrollNode == node){
-            function(scrollNode->value, constPar, par);
-          }else if(scrollNode != node){
-            RecursiveMapPostOrder(scrollNode->next, function, par, node);
-            function(scrollNode->value, constPar, par);
-          }
-        }
+        FoldPostOrder(function, constPar, par, node->next);
+        function(node->value, constPar, par);
+      }
