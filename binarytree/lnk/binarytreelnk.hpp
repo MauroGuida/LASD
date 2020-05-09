@@ -57,7 +57,7 @@ public:
 
       struct NodeLnk& LeftChild() const override; // Override Node member (might throw std::out_of_range)
       struct NodeLnk& RightChild() const override; // Override Node member (might throw std::out_of_range)
-
+      
   };
 
 protected:
@@ -107,9 +107,9 @@ public:
   void NewRoot(const Data&) override; // Override Node member (Copy of the value)
   void NewRoot(Data&&) override; // Override Node member (Move of the value)
 
-  void AddLeftChild(struct NodeLnk&, Data&); // Add a child to a given node (Copy of the value)
+  void AddLeftChild(struct NodeLnk&, const Data&); // Add a child to a given node (Copy of the value)
   void AddLeftChild(struct NodeLnk&, Data&&); // Add a child to a given node (Move of the value)
-  void AddRightChild(struct NodeLnk&, Data&); // Add a child to a given node (Copy of the value)
+  void AddRightChild(struct NodeLnk&, const Data&); // Add a child to a given node (Copy of the value)
   void AddRightChild(struct NodeLnk&, Data&&); // Add a child to a given node (Move of the value)
 
   void RemoveLeftChild(struct NodeLnk&); // Remove an entire subtree rooted in a child of a given node

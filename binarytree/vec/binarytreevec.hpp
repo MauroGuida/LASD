@@ -24,7 +24,7 @@ protected:
 
   using BinaryTree<Data>::size;
   ulong treeHeight = 0;
-  Vector<ulong> heightVector;
+  ulong heightVector[100];
 
 public:
 
@@ -34,7 +34,7 @@ public:
 
   private:
 
-    // ...
+    BinaryTreeVec<Data> *refTree = nullptr;
 
   protected:
 
@@ -126,13 +126,13 @@ public:
   void NewRoot(const Data&) override; // Override Node member (Copy of the value)
   void NewRoot(Data&&) override; // Override Node member (Move of the value)
 
-  void AddLeftChild(const struct NodeVec&, const Data&); // Add a child to a given node (Copy of the value)
-  void AddLeftChild(const struct NodeVec&, Data&&); // Add a child to a given node (Move of the value)
-  void AddRightChild(const struct NodeVec&, const Data&); // Add a child to a given node (Copy of the value)
-  void AddRightChild(const struct NodeVec&, Data&&); // Add a child to a given node (Move of the value)
+  void AddLeftChild(struct NodeVec&, const Data&); // Add a child to a given node (Copy of the value)
+  void AddLeftChild(struct NodeVec&, Data&&); // Add a child to a given node (Move of the value)
+  void AddRightChild(struct NodeVec&, const Data&); // Add a child to a given node (Copy of the value)
+  void AddRightChild(struct NodeVec&, Data&&); // Add a child to a given node (Move of the value)
 
-  void RemoveLeftChild(const struct NodeVec&); // Remove an entire subtree rooted in a child of a given node
-  void RemoveRightChild(const struct NodeVec&); // Remove an entire subtree rooted in a child of a given node
+  void RemoveLeftChild(struct NodeVec&); // Remove an entire subtree rooted in a child of a given node
+  void RemoveRightChild(struct NodeVec&); // Remove an entire subtree rooted in a child of a given node
 
   /* ************************************************************************ */
 
@@ -153,6 +153,33 @@ protected:
   // Accessory functions
   void Expand();
   void Reduce();
+
+// public:
+//   void stampaVecAltezza(){
+//     std::cout << std::endl << std::endl;
+//     std::cout << "Tree height: " << treeHeight << std::endl;
+//       for(int i = 0; i < 30; i++)
+//         std::cout << heightVector[i] << " ";
+//
+//     std::cout << std::endl;
+//
+//     std::cout << "Dimensione Vettore: " << treeVec.Size() << std::endl;
+//     std::cout << std::endl << std::endl;
+//     }
+//
+  // void stampaVettore(){
+  //   for(int i=0; i< treeVec.Size(); i++)
+  //     if(treeVec[i].valid)
+  //       std::cout << treeVec[i].Element() << " ";
+  //     else
+  //       std::cout << "0" << " ";
+  //
+  //   std::cout << std::endl;
+  // }
+  //
+  // void stampaAltezza(){
+  //   std::cout << treeHeight << std::endl;
+  // }
 
 };
 

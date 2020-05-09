@@ -36,6 +36,7 @@ public:
       Data value;
 
       // Specific constructors
+      Node() = default;
       Node(const Data&);
       Node(Data&&);
 
@@ -123,7 +124,7 @@ protected:
   virtual void FoldInOrder(FoldFunctor, const void*, void*, struct Node&) const; // Accessory function executing from one node of the tree
   virtual void FoldPostOrder(FoldFunctor, const void*, void*, struct Node&) const; // Accessory function executing from one node of the tree
 
-  public: bool equals(const struct Node& T1, const struct Node& T2) const;
+  bool equals(const struct Node& T1, const struct Node& T2) const;
 };
 
 /* ************************************************************************** */

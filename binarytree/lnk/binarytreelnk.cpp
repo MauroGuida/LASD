@@ -130,7 +130,7 @@
   }
 
   template <typename Data>
-  void BinaryTreeLnk<Data>::AddLeftChild(struct NodeLnk& mainNode, Data& newChildData){
+  void BinaryTreeLnk<Data>::AddLeftChild(struct NodeLnk& mainNode, const Data& newChildData){
     if(mainNode.HasLeftChild())
       RemoveLeftChild(mainNode);
 
@@ -148,7 +148,7 @@
   }
 
   template <typename Data>
-  void BinaryTreeLnk<Data>::AddRightChild(struct NodeLnk& mainNode, Data& newChildData){
+  void BinaryTreeLnk<Data>::AddRightChild(struct NodeLnk& mainNode, const Data& newChildData){
     if(mainNode.HasRightChild())
       RemoveRightChild(mainNode);
 

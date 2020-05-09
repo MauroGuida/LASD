@@ -32,35 +32,36 @@ using namespace lasd;
 // Comparison operators
   template <typename Data>
   bool BinaryTree<Data>::operator==(const BinaryTree<Data>& comp) const noexcept{
-    if(size == comp.size)
+    if(size == 0 && comp.size == 0)
+      return true;
+    else if(size == comp.size)
       return equals(Root(), comp.Root());
     else
       return false;
   }
 
     template <typename Data>
-    bool BinaryTree<Data>::equals(const struct Node& T1, const struct Node& T2) const{
-      if((&T1 != nullptr && &T2 == nullptr) || (&T1 == nullptr && &T2 != nullptr))
-        return false;
-      else if(&T1 == nullptr && &T2 == nullptr)
-        return true;
-
+    bool BinaryTree<Data>::equals(const struct BinaryTree<Data>::Node& T1, const struct BinaryTree<Data>::Node& T2) const{
       if(T1 != T2)
         return false;
-      else{
-        bool flag = true;
 
-        try{
+      bool flag = true;
+      if(!(T1.HasLeftChild() ^ T2.HasLeftChild())){
+        if(T1.HasLeftChild() && T2.HasLeftChild())
           flag = equals(T1.LeftChild(), T2.LeftChild());
-        }catch(const std::length_error& e){}
-
-        if(flag)
-          try{
-            flag = equals (T1.RightChild(), T1.RightChild());
-          }catch(const std::length_error& e){}
-
-        return flag;
+        // else
+        //   flag = true;
       }
+
+
+      if(!(T1.HasRightChild() ^ T2.HasRightChild())){
+        if(T1.HasRightChild() && T2.HasRightChild())
+          return flag && equals(T1.RightChild(), T2.RightChild());
+        // else
+        //   return flag;
+      }
+
+      return flag;
     }
 
   template <typename Data>
