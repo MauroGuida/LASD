@@ -6,7 +6,7 @@
     if(index == 0)
       return false;
 
-    return ((refTree->treeVec)[(index-1)/2].valid);
+    return ((refTree->treeVec)[(index-1)/2]->valid);
   }
 
   template <typename Data>
@@ -14,7 +14,7 @@
     if(index == 0)
       return false;
 
-    return ((refTree->treeVec)[index-1].valid && (refTree->treeVec)[index-1].height == (refTree->treeVec)[index].height);
+    return ((refTree->treeVec)[index-1] != nullptr && (refTree->treeVec)[index-1]->height == (refTree->treeVec)[index]->height);
   }
 
   template <typename Data>
@@ -22,7 +22,7 @@
     if(index == 0)
       return false;
 
-    return ((refTree->treeVec)[index+1].valid && (refTree->treeVec)[index+1].height == (refTree->treeVec)[index].height);
+    return ((refTree->treeVec)[index+1] != nullptr && (refTree->treeVec)[index+1]->height == (refTree->treeVec)[index]->height);
   }
 
   template <typename Data>
@@ -30,7 +30,7 @@
     if(!HasParent())
       throw std::out_of_range("Parent does not Exists!");
 
-    return (refTree->treeVec)[(index-1)/2];
+    return *(refTree->treeVec)[(index-1)/2];
   }
 
   template <typename Data>
@@ -38,7 +38,7 @@
     if(!HasLeftSibling())
       throw std::out_of_range("Left Sibling does not Exists!");
 
-    return (refTree->treeVec)[index-1];
+    return *(refTree->treeVec)[index-1];
   }
 
   template <typename Data>
@@ -46,7 +46,7 @@
     if(!HasRightSibling())
       throw std::out_of_range("Right Sibling does not Exists!");
 
-    return (refTree->treeVec)[index+1];
+    return *(refTree->treeVec)[index+1];
   }
 
 // Specific member functions (inherited from Node)
@@ -67,16 +67,16 @@
 
   template <typename Data>
   bool BinaryTreeVec<Data>::NodeVec::HasLeftChild() const noexcept{
-    if((2 * index+1) < (refTree->treeVec).Size())
-      return ((refTree->treeVec)[2 * index+1].valid);
+    if(left < refTree->treeVec.Size())
+      return refTree->treeVec[left] != nullptr;
 
     return false;
   }
 
   template <typename Data>
   bool BinaryTreeVec<Data>::NodeVec::HasRightChild() const noexcept{
-    if((2 * index+2) < (refTree->treeVec).Size())
-      return ((refTree->treeVec)[2 * index+2].valid);
+    if(right < refTree->treeVec.Size())
+      return refTree->treeVec[right] != nullptr;
 
     return false;
   }
@@ -86,7 +86,7 @@
     if(!HasLeftChild())
       throw std::out_of_range("Left Child does not Exists!");
 
-    return (refTree->treeVec)[2 * index+1];
+    return *(refTree->treeVec)[left];
   }
 
   template <typename Data>
@@ -94,7 +94,7 @@
     if(!HasRightChild())
       throw std::out_of_range("Right Child does not Exists!");
 
-    return (refTree->treeVec)[2 * index+2];
+    return *(refTree->treeVec)[right];
   }
 
 // BinaryTreeVec
@@ -105,20 +105,21 @@
       heightVector[i] = 0;
 
     treeVec.Resize(7);
-    // heightVector.Resize(4);
+    for(ulong i = 0; i < treeVec.Size(); i++)
+      treeVec[i] = nullptr;
+
+
+    treeVec[0] = new struct NodeVec(newValue);
 
     heightVector[0] = 1;
 
-    treeVec[0].value = newValue;
+    treeVec[0]->index = 0;
+    treeVec[0]->height = 0;
 
-    treeVec[0].index = 0;
-    treeVec[0].height = 0;
+    treeVec[0]->left = 1;
+    treeVec[0]->right = 2;
 
-    treeVec[0].left = 1;
-    treeVec[0].right = 2;
-
-    treeVec[0].valid = true;
-    treeVec[0].refTree = this;
+    treeVec[0]->refTree = this;
 
     size++;
   }
@@ -129,20 +130,21 @@
       heightVector[i] = 0;
 
     treeVec.Resize(7);
-    // heightVector.Resize(4);
+    for(ulong i = 0; i < treeVec.Size(); i++)
+      treeVec[i] = nullptr;
+
+
+    treeVec[0] = new struct NodeVec(std::move(newValue));
 
     heightVector[0] = 1;
 
-    treeVec[0].value = std::move(newValue);
+    treeVec[0]->index = 0;
+    treeVec[0]->height = 0;
 
-    treeVec[0].index = 0;
-    treeVec[0].height = 0;
+    treeVec[0]->left = 1;
+    treeVec[0]->right = 2;
 
-    treeVec[0].left = 1;
-    treeVec[0].right = 2;
-
-    treeVec[0].valid = true;
-    treeVec[0].refTree = this;
+    treeVec[0]->refTree = this;
 
     size++;
   }
@@ -153,27 +155,41 @@
     treeHeight = copyTree.treeHeight;
     size = copyTree.size;
 
-    treeVec = copyTree.treeVec;
-    for(int i=0; i<100; i++)
-      heightVector[i] = copyTree.heightVector[i];
+    treeVec.Resize(copyTree.treeVec.Size());
+    for(ulong i = 0; i < treeVec.Size(); i++)
+      treeVec[i] = nullptr;
 
-    for(ulong i=0; i<treeVec.Size(); i++)
-      if(treeVec[i].valid)
-        treeVec[i].refTree = this;
+    for(ulong i = 0; i < copyTree.treeVec.Size(); i++)
+      if(copyTree.treeVec[i] != nullptr){
+        treeVec[i] = new struct NodeVec(copyTree.treeVec[i]->value);
+
+        treeVec[i]->index = copyTree.treeVec[i]->index;
+        treeVec[i]->height = copyTree.treeVec[i]->height;
+
+        treeVec[i]->left = copyTree.treeVec[i]->left;
+        treeVec[i]->right = copyTree.treeVec[i]->right;
+
+        treeVec[i]->refTree = this;
+      }
+
+    for(int i = 0; i < 100; i++)
+      heightVector[i] = copyTree.heightVector[i];
   }
 
   // Move constructor
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(BinaryTreeVec<Data>&& moveTree) noexcept{
+    Clear();
+
     std::swap(treeHeight, moveTree.treeHeight);
     std::swap(size, moveTree.size);
 
     std::swap(treeVec, moveTree.treeVec);
     std::swap(heightVector, moveTree.heightVector);
 
-    for(ulong i=0; i<treeVec.Size(); i++)
-      if(treeVec[i].valid)
-        treeVec[i].refTree = this;
+    for(ulong i = 0; i<treeVec.Size(); i++)
+      if(treeVec[i] != nullptr)
+        treeVec[i]->refTree = this;
   }
 
 // Destructor
@@ -191,13 +207,25 @@
     treeHeight = copyTree.treeHeight;
     size = copyTree.size;
 
-    treeVec = copyTree.treeVec;
-    for(int i=0; i<100; i++)
-      heightVector[i] = copyTree.heightVector[i];
+    treeVec.Resize(copyTree.treeVec.Size());
+    for(ulong i = 0; i < treeVec.Size(); i++)
+      treeVec[i] = nullptr;
 
-    for(ulong i=0; i<treeVec.Size(); i++)
-      if(treeVec[i].valid)
-        treeVec[i].refTree = this;
+    for(ulong i = 0; i < copyTree.treeVec.Size(); i++)
+      if(copyTree.treeVec[i] != nullptr){
+        treeVec[i] = new struct NodeVec(copyTree.treeVec[i]->value);
+
+        treeVec[i]->index = copyTree.treeVec[i]->index;
+        treeVec[i]->height = copyTree.treeVec[i]->height;
+
+        treeVec[i]->left = copyTree.treeVec[i]->left;
+        treeVec[i]->right = copyTree.treeVec[i]->right;
+
+        treeVec[i]->refTree = this;
+      }
+
+    for(int i = 0; i < 100; i++)
+      heightVector[i] = copyTree.heightVector[i];
 
     return *this;
   }
@@ -213,9 +241,9 @@
     std::swap(treeVec, moveTree.treeVec);
     std::swap(heightVector, moveTree.heightVector);
 
-    for(ulong i=0; i<treeVec.Size(); i++)
-      if(treeVec[i].valid)
-        treeVec[i].refTree = this;
+    for(ulong i = 0; i<treeVec.Size(); i++)
+      if(treeVec[i] != nullptr)
+        treeVec[i]->refTree = this;
 
     return *this;
   }
@@ -226,28 +254,24 @@
     if(size == 0)
       throw std::out_of_range("Root does not Exists!");
 
-    return treeVec[0];
+    return *treeVec[0];
   }
 
   template <typename Data>
   void BinaryTreeVec<Data>::NewRoot(const Data& newValue){
     Clear();
 
-    treeVec.Resize(7);
-    // heightVector.Resize(4);
+    treeVec[0] = new struct NodeVec(newValue);
 
     heightVector[0] = 1;
 
-    treeVec[0].value = newValue;
+    treeVec[0]->index = 0;
+    treeVec[0]->height = 0;
 
-    treeVec[0].index = 0;
-    treeVec[0].height = 0;
+    treeVec[0]->left = 1;
+    treeVec[0]->right = 2;
 
-    treeVec[0].left = 1;
-    treeVec[0].right = 2;
-
-    treeVec[0].valid = true;
-    treeVec[0].refTree = this;
+    treeVec[0]->refTree = this;
 
     size++;
   }
@@ -256,21 +280,17 @@
   void BinaryTreeVec<Data>::NewRoot(Data&& newValue){
     Clear();
 
-    treeVec.Resize(7);
-    // heightVector.Resize(4);
+    treeVec[0] = new struct NodeVec(std::move(newValue));
 
     heightVector[0] = 1;
 
-    treeVec[0].value = std::move(newValue);
+    treeVec[0]->index = 0;
+    treeVec[0]->height = 0;
 
-    treeVec[0].index = 0;
-    treeVec[0].height = 0;
+    treeVec[0]->left = 1;
+    treeVec[0]->right = 2;
 
-    treeVec[0].left = 1;
-    treeVec[0].right = 2;
-
-    treeVec[0].valid = true;
-    treeVec[0].refTree = this;
+    treeVec[0]->refTree = this;
 
     size++;
   }
@@ -280,38 +300,25 @@
     if(node.HasLeftChild())
       RemoveLeftChild(node);
 
-    ulong newNodeIndex = node.left;
-    ulong fatherIndex = node.index;
-
-    // std::cout << "Indice del nuovo nodo: " << newNodeIndex <<
-    // "  Indice del padre: " << fatherIndex << std::endl;
-    //
-    // std::cout << "Altezza nuovo nodo: " << treeVec[fatherIndex].height+1 <<
-    // "  Altezza del padre: " << treeVec[fatherIndex].height << std::endl;
-
-    if(newNodeIndex >= treeVec.Size())
+    if(node.height+1 > treeHeight)
       Expand();
 
-    treeVec[newNodeIndex].value = value;
+    treeVec[node.left] = new struct NodeVec(value);
 
-    treeVec[newNodeIndex].index = newNodeIndex;
-    treeVec[newNodeIndex].height = treeVec[fatherIndex].height+1;
+    treeVec[node.left]->index = node.left;
+    treeVec[node.left]->height = node.height+1;
 
-    treeVec[newNodeIndex].left = 2 * treeVec[fatherIndex].left+1;
-    treeVec[newNodeIndex].right = 2 * treeVec[fatherIndex].left+2;
+    treeVec[node.left]->left = 2 * node.left + 1;
+    treeVec[node.left]->right = 2 * node.left + 2;
 
-    treeVec[newNodeIndex].valid = true;
-    treeVec[newNodeIndex].refTree = this;
+    treeVec[node.left]->refTree = this;
 
     size++;
 
-    if(treeHeight < treeVec[newNodeIndex].height)
+    if(treeHeight < treeVec[node.left]->height)
       treeHeight++;
 
-    heightVector[treeVec[newNodeIndex].height]++;
-
-    // std::cout << "L'altezza " << treeVec[newNodeIndex].height << " adesso ha " <<
-    // heightVector[treeVec[newNodeIndex].height] << " nodi" << std::endl;
+    heightVector[treeVec[node.left]->height]++;
    }
 
   template <typename Data>
@@ -319,38 +326,25 @@
     if(node.HasLeftChild())
       RemoveLeftChild(node);
 
-    ulong newNodeIndex = node.left;
-    ulong fatherIndex = node.index;
-
-    // std::cout << "Indice del nuovo nodo: " << newNodeIndex <<
-    // "  Indice del padre: " << fatherIndex << std::endl;
-    //
-    // std::cout << "Altezza nuovo nodo: " << treeVec[fatherIndex].height+1 <<
-    // "  Altezza del padre: " << treeVec[fatherIndex].height << std::endl;
-
-    if(newNodeIndex >= treeVec.Size())
+    if(node.height+1 > treeHeight)
       Expand();
 
-    treeVec[newNodeIndex].value = std::move(value);
+    treeVec[node.left] = new struct NodeVec(std::move(value));
 
-    treeVec[newNodeIndex].index = newNodeIndex;
-    treeVec[newNodeIndex].height = treeVec[fatherIndex].height+1;
+    treeVec[node.left]->index = node.left;
+    treeVec[node.left]->height = node.height+1;
 
-    treeVec[newNodeIndex].left = 2 * treeVec[fatherIndex].left+1;
-    treeVec[newNodeIndex].right = 2 * treeVec[fatherIndex].left+2;
+    treeVec[node.left]->left = node.left * 2 + 1;
+    treeVec[node.left]->right = node.left * 2 + 2;
 
-    treeVec[newNodeIndex].valid = true;
-    treeVec[newNodeIndex].refTree = this;
+    treeVec[node.left]->refTree = this;
 
     size++;
 
-    if(treeHeight < treeVec[newNodeIndex].height)
+    if(treeHeight < treeVec[node.left]->height)
       treeHeight++;
 
-    heightVector[treeVec[newNodeIndex].height]++;
-
-    // std::cout << "L'altezza " << treeVec[newNodeIndex].height << " adesso ha " <<
-    // heightVector[treeVec[newNodeIndex].height] << " nodi" << std::endl;
+    heightVector[treeVec[node.left]->height]++;
   }
 
   template <typename Data>
@@ -358,38 +352,25 @@
     if(node.HasRightChild())
       RemoveRightChild(node);
 
-    ulong newNodeIndex = node.right;
-    ulong fatherIndex = node.index;
-
-    // std::cout << "Indice del nuovo nodo: " << newNodeIndex <<
-    // "  Indice del padre: " << fatherIndex << std::endl;
-    //
-    // std::cout << "Altezza nuovo nodo: " << treeVec[fatherIndex].height+1 <<
-    // "  Altezza del padre: " << treeVec[fatherIndex].height << std::endl;
-
-    if(newNodeIndex >= treeVec.Size())
+    if(node.height+1 > treeHeight)
       Expand();
 
-    treeVec[newNodeIndex].value = value;
+    treeVec[node.right] = new struct NodeVec(value);
 
-    treeVec[newNodeIndex].index = newNodeIndex;
-    treeVec[newNodeIndex].height = treeVec[fatherIndex].height+1;
+    treeVec[node.right]->index = node.right;
+    treeVec[node.right]->height = node.height+1;
 
-    treeVec[newNodeIndex].left = 2 * treeVec[fatherIndex].right+1;
-    treeVec[newNodeIndex].right = 2 * treeVec[fatherIndex].right+2;
+    treeVec[node.right]->left = node.right * 2 + 1;
+    treeVec[node.right]->right = node.right * 2 + 2;
 
-    treeVec[newNodeIndex].valid = true;
-    treeVec[newNodeIndex].refTree = this;
+    treeVec[node.right]->refTree = this;
 
     size++;
 
-    if(treeHeight < treeVec[newNodeIndex].height)
+    if(treeHeight < treeVec[node.right]->height)
       treeHeight++;
 
-    heightVector[treeVec[newNodeIndex].height]++;
-
-    // std::cout << "L'altezza " << treeVec[newNodeIndex].height << " adesso ha " <<
-    // heightVector[treeVec[newNodeIndex].height] << " nodi" << std::endl;
+    heightVector[treeVec[node.right]->height]++;
   }
 
   template <typename Data>
@@ -397,38 +378,25 @@
     if(node.HasRightChild())
       RemoveRightChild(node);
 
-    ulong newNodeIndex = node.right;
-    ulong fatherIndex = node.index;
-
-    // std::cout << "Indice del nuovo nodo: " << newNodeIndex <<
-    // "  Indice del padre: " << fatherIndex << std::endl;
-    //
-    // std::cout << "Altezza nuovo nodo: " << treeVec[fatherIndex].height+1 <<
-    // "  Altezza del padre: " << treeVec[fatherIndex].height << std::endl;
-
-    if(newNodeIndex >= treeVec.Size())
+    if(node.height+1 > treeHeight)
       Expand();
 
-    treeVec[newNodeIndex].value = std::move(value);
+    treeVec[node.right] = new struct NodeVec(std::move(value));
 
-    treeVec[newNodeIndex].index = newNodeIndex;
-    treeVec[newNodeIndex].height = treeVec[fatherIndex].height+1;
+    treeVec[node.right]->index = node.right;
+    treeVec[node.right]->height = node.height+1;
 
-    treeVec[newNodeIndex].left = 2 * treeVec[fatherIndex].right+1;
-    treeVec[newNodeIndex].right = 2 * treeVec[fatherIndex].right+2;
+    treeVec[node.right]->left = node.right * 2 + 1;
+    treeVec[node.right]->right = node.right * 2 + 2;
 
-    treeVec[newNodeIndex].valid = true;
-    treeVec[newNodeIndex].refTree = this;
+    treeVec[node.right]->refTree = this;
 
     size++;
 
-    if(treeHeight < treeVec[newNodeIndex].height)
+    if(treeHeight < treeVec[node.right]->height)
       treeHeight++;
 
-    heightVector[treeVec[newNodeIndex].height]++;
-
-    // std::cout << "L'altezza " << treeVec[newNodeIndex].height << " adesso ha " <<
-    // heightVector[treeVec[newNodeIndex].height] << " nodi" << std::endl;
+    heightVector[treeVec[node.right]->height]++;
   }
 
   template <typename Data>
@@ -439,23 +407,25 @@
     ulong RIndex = node.right;
 
 
-    if(treeVec.Size() > nodeIndex && treeVec[nodeIndex].HasLeftChild())
-      removeSubtree(treeVec[LIndex]);
+    if(treeVec.Size() > nodeIndex && treeVec[nodeIndex]->HasLeftChild())
+      removeSubtree(*treeVec[LIndex]);
 
-    if(treeVec.Size() > nodeIndex && treeVec[nodeIndex].HasRightChild())
-      removeSubtree(treeVec[RIndex]);
+    if(treeVec.Size() > nodeIndex && treeVec[nodeIndex]->HasRightChild())
+      removeSubtree(*treeVec[RIndex]);
 
 
-    treeVec[nodeIndex].valid = false;
+    int h = node.height;
+    delete treeVec[nodeIndex];
+    treeVec[nodeIndex] = nullptr;
 
     size--;
-    heightVector[treeVec[nodeIndex].height]--;
+    heightVector[h]--;
 
 
     if(heightVector[treeHeight] == 0){
-      if(treeHeight > 2){
-        Reduce(); //CRASH
-      }
+      if(treeHeight > 2)
+        Reduce();
+
       treeHeight--;
     }
   }
@@ -464,88 +434,62 @@
   void BinaryTreeVec<Data>::RemoveLeftChild(struct NodeVec& node){
     if(node.HasLeftChild())
       removeSubtree(node.LeftChild());
-
-    // ulong nodeIndex = node.left;
-    //
-    // if(treeVec[nodeIndex].HasLeftChild())
-    //   RemoveLeftChild(treeVec[nodeIndex].LeftChild());
-    //
-    // if(treeVec[nodeIndex].HasRightChild())
-    //   RemoveRightChild(treeVec[nodeIndex].RightChild());
-    //
-    // treeVec[nodeIndex].valid = false;
-    //
-    // size--;
-    // heightVector[treeVec[nodeIndex].height+1]--;
-    //
-    // if(heightVector[treeHeight] == 0){
-    //   if(treeVec.Size() > 7)
-    //     Reduce();
-    //   treeHeight--;
-    // }
   }
 
   template <typename Data>
   void BinaryTreeVec<Data>::RemoveRightChild(struct NodeVec& node){
     if(node.HasRightChild())
       removeSubtree(node.RightChild());
-
-    // ulong nodeIndex = node.right;
-    //
-    // if(treeVec[nodeIndex].HasLeftChild())
-    //   RemoveLeftChild(treeVec[nodeIndex].LeftChild());
-    //
-    // if(treeVec[nodeIndex].HasRightChild())
-    //   RemoveRightChild(treeVec[nodeIndex].RightChild());
-    //
-    // treeVec[nodeIndex].valid = false;
-    //
-    // size--;
-    // heightVector[treeVec[nodeIndex].height+1]--;
-    //
-    // if(heightVector[treeHeight] == 0){
-    //   if(treeVec.Size() > 7)
-    //     Reduce();
-    //   treeHeight--;
-    // }
   }
 
 // Specific member functions (inherited from Container)
   template <typename Data>
   void BinaryTreeVec<Data>::Clear(){
+    for(ulong i = 0; i < treeVec.Size(); i++)
+      if(treeVec[i] != nullptr){
+        delete treeVec[i];
+        treeVec[i] = nullptr;
+      }
+
     treeVec.Clear();
-    // heightVector.Clear();
+
     for(int i = 0; i < 100; i++)
       heightVector[i] = 0;
 
     size = 0;
     treeHeight = 0;
+
+    treeVec.Resize(7);
+    for(int i = 0; i < 7; i++)
+      treeVec[i] = nullptr;
   }
 
 // Specific member functions (inherited from BreadthSearchableContainer)
   template <typename Data>
   void BinaryTreeVec<Data>::MapBreadth(MapFunctor func, void* par){
     for(ulong i = 0; i < treeVec.Size(); i++)
-      if(treeVec[i].valid)
-        func(treeVec[i].value, par);
+      if(treeVec[i] != nullptr)
+        func(treeVec[i]->value, par);
   }
 
   template <typename Data>
   void BinaryTreeVec<Data>::FoldBreadth(FoldFunctor func, const void* cPar, void* par) const{
     for(ulong i = 0; i < treeVec.Size(); i++)
-      if(treeVec[i].valid)
-        func(treeVec[i].value, cPar, par);
+      if(treeVec[i] != nullptr)
+        func(treeVec[i]->value, cPar, par);
   }
 
 // Accessory functions
   template <typename Data>
   void BinaryTreeVec<Data>::Expand(){
-    // heightVector.Resize(heightVector.Size() + 1);
-    treeVec.Resize(treeVec.Size()*2+1);
+    ulong oldSize = treeVec.Size();
+    treeVec.Resize(oldSize*2+1);
+
+    for(ulong i = oldSize; i < treeVec.Size(); i++)
+      treeVec[i] = nullptr;
   }
 
   template <typename Data>
   void BinaryTreeVec<Data>::Reduce(){
-    // heightVector.Resize(heightVector.Size() - 1);
     treeVec.Resize((treeVec.Size()-1)/2);
   }

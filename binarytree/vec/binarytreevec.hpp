@@ -44,7 +44,7 @@ public:
     ulong left;
     ulong right;
 
-    bool valid = false;
+    // bool valid = false;
 
     using BinaryTree<Data>::Node::value;
     using BinaryTree<Data>::Node::Node;
@@ -81,7 +81,7 @@ public:
 
 protected:
 
-  Vector<struct NodeVec> treeVec;
+  Vector<struct NodeVec*> treeVec;
 
   /* ************************************************************************ */
 
