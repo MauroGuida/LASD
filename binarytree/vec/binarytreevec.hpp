@@ -154,6 +154,8 @@ protected:
   void Expand();
   void Reduce();
 
+  void removeSubtree(struct NodeVec&);
+
 // public:
 //   void stampaVecAltezza(){
 //     std::cout << std::endl << std::endl;

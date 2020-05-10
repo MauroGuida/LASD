@@ -154,7 +154,12 @@
     size = copyTree.size;
 
     treeVec = copyTree.treeVec;
-    heightVector = copyTree.heightVector;
+    for(int i=0; i<100; i++)
+      heightVector[i] = copyTree.heightVector[i];
+
+    for(ulong i=0; i<treeVec.Size(); i++)
+      if(treeVec[i].valid)
+        treeVec[i].refTree = this;
   }
 
   // Move constructor
@@ -165,6 +170,10 @@
 
     std::swap(treeVec, moveTree.treeVec);
     std::swap(heightVector, moveTree.heightVector);
+
+    for(ulong i=0; i<treeVec.Size(); i++)
+      if(treeVec[i].valid)
+        treeVec[i].refTree = this;
   }
 
 // Destructor
@@ -183,7 +192,12 @@
     size = copyTree.size;
 
     treeVec = copyTree.treeVec;
-    heightVector = copyTree.heightVector;
+    for(int i=0; i<100; i++)
+      heightVector[i] = copyTree.heightVector[i];
+
+    for(ulong i=0; i<treeVec.Size(); i++)
+      if(treeVec[i].valid)
+        treeVec[i].refTree = this;
 
     return *this;
   }
@@ -198,6 +212,10 @@
 
     std::swap(treeVec, moveTree.treeVec);
     std::swap(heightVector, moveTree.heightVector);
+
+    for(ulong i=0; i<treeVec.Size(); i++)
+      if(treeVec[i].valid)
+        treeVec[i].refTree = this;
 
     return *this;
   }
@@ -414,53 +432,82 @@
   }
 
   template <typename Data>
-  void BinaryTreeVec<Data>::RemoveLeftChild(struct NodeVec& node){
-    if(!node.HasLeftChild())
-      return;
-
+  void BinaryTreeVec<Data>::removeSubtree(struct NodeVec& node){
     ulong nodeIndex = node.index;
 
-    if(treeVec[nodeIndex].HasLeftChild())
-      RemoveLeftChild(treeVec[nodeIndex].LeftChild());
+    ulong LIndex = node.left;
+    ulong RIndex = node.right;
 
-    if(treeVec[nodeIndex].HasRightChild())
-      RemoveRightChild(treeVec[nodeIndex].RightChild());
 
-    treeVec[nodeIndex].LeftChild().valid = false;
+    if(treeVec.Size() > nodeIndex && treeVec[nodeIndex].HasLeftChild())
+      removeSubtree(treeVec[LIndex]);
+
+    if(treeVec.Size() > nodeIndex && treeVec[nodeIndex].HasRightChild())
+      removeSubtree(treeVec[RIndex]);
+
+
+    treeVec[nodeIndex].valid = false;
 
     size--;
-    heightVector[treeVec[nodeIndex].height+1]--;
+    heightVector[treeVec[nodeIndex].height]--;
+
 
     if(heightVector[treeHeight] == 0){
-      if(treeVec.Size() > 7)
-        Reduce();
+      if(treeHeight > 2){
+        Reduce(); //CRASH
+      }
       treeHeight--;
     }
   }
 
   template <typename Data>
+  void BinaryTreeVec<Data>::RemoveLeftChild(struct NodeVec& node){
+    if(node.HasLeftChild())
+      removeSubtree(node.LeftChild());
+
+    // ulong nodeIndex = node.left;
+    //
+    // if(treeVec[nodeIndex].HasLeftChild())
+    //   RemoveLeftChild(treeVec[nodeIndex].LeftChild());
+    //
+    // if(treeVec[nodeIndex].HasRightChild())
+    //   RemoveRightChild(treeVec[nodeIndex].RightChild());
+    //
+    // treeVec[nodeIndex].valid = false;
+    //
+    // size--;
+    // heightVector[treeVec[nodeIndex].height+1]--;
+    //
+    // if(heightVector[treeHeight] == 0){
+    //   if(treeVec.Size() > 7)
+    //     Reduce();
+    //   treeHeight--;
+    // }
+  }
+
+  template <typename Data>
   void BinaryTreeVec<Data>::RemoveRightChild(struct NodeVec& node){
-    if(!node.HasRightChild())
-      return;
+    if(node.HasRightChild())
+      removeSubtree(node.RightChild());
 
-    ulong nodeIndex = node.index;
-
-    if(treeVec[nodeIndex].HasLeftChild())
-      RemoveLeftChild(treeVec[nodeIndex].LeftChild());
-
-    if(treeVec[nodeIndex].HasRightChild())
-      RemoveRightChild(treeVec[nodeIndex].RightChild());
-
-    treeVec[nodeIndex].RightChild().valid = false;
-
-    size--;
-    heightVector[treeVec[nodeIndex].height+1]--;
-
-    if(heightVector[treeHeight] == 0){
-      if(treeVec.Size() > 7)
-        Reduce();
-      treeHeight--;
-    }
+    // ulong nodeIndex = node.right;
+    //
+    // if(treeVec[nodeIndex].HasLeftChild())
+    //   RemoveLeftChild(treeVec[nodeIndex].LeftChild());
+    //
+    // if(treeVec[nodeIndex].HasRightChild())
+    //   RemoveRightChild(treeVec[nodeIndex].RightChild());
+    //
+    // treeVec[nodeIndex].valid = false;
+    //
+    // size--;
+    // heightVector[treeVec[nodeIndex].height+1]--;
+    //
+    // if(heightVector[treeHeight] == 0){
+    //   if(treeVec.Size() > 7)
+    //     Reduce();
+    //   treeHeight--;
+    // }
   }
 
 // Specific member functions (inherited from Container)

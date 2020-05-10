@@ -142,7 +142,7 @@
   template <typename Data>
   Data& Vector<Data>::operator[](const ulong index) const{
     if(index >= size)
-      throw std::length_error("Array is empty!");
+      throw std::length_error("Out of Range!");
 
     return Elements[index];
   }
