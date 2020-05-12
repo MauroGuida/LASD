@@ -31,7 +31,7 @@ public:
 
       // ...
 
-    protected:
+    public:
 
       Data value;
 
@@ -39,8 +39,6 @@ public:
       Node() = default;
       Node(const Data&);
       Node(Data&&);
-
-    public:
 
       friend class BinaryTree<Data>;
 

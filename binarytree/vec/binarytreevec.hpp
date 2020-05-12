@@ -44,12 +44,14 @@ public:
     ulong left;
     ulong right;
 
-    // bool valid = false;
 
     using BinaryTree<Data>::Node::value;
-    using BinaryTree<Data>::Node::Node;
+    // using BinaryTree<Data>::Node::Node;
 
   public:
+
+    NodeVec(Data&&, ulong, ulong, ulong, ulong, BinaryTreeVec<Data>*);
+    NodeVec(const Data&, ulong, ulong, ulong, ulong, BinaryTreeVec<Data>*);
 
     friend class BinaryTreeVec<Data>;
 

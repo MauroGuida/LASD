@@ -1,12 +1,38 @@
 
 // NodeVec
+template <typename Data>
+BinaryTreeVec<Data>::NodeVec::NodeVec(Data&& elem, ulong i, ulong h, ulong l, ulong r, BinaryTreeVec<Data>* ref){
+  value = std::move(elem);
+
+  index = i;
+  height = h;
+
+  left = l;
+  right = r;
+
+  refTree = ref;
+}
+
+template <typename Data>
+BinaryTreeVec<Data>::NodeVec::NodeVec(const Data& elem, ulong i, ulong h, ulong l, ulong r, BinaryTreeVec<Data>* ref){
+  value = elem;
+
+  index = i;
+  height = h;
+
+  left = l;
+  right = r;
+
+  refTree = ref;
+}
+
 // Specific member functions
   template <typename Data>
   bool BinaryTreeVec<Data>::NodeVec::HasParent() const noexcept{
     if(index == 0)
       return false;
 
-    return ((refTree->treeVec)[(index-1)/2]->valid);
+    return ((refTree->treeVec)[(index-1)/2] != nullptr);
   }
 
   template <typename Data>
@@ -109,17 +135,17 @@
       treeVec[i] = nullptr;
 
 
-    treeVec[0] = new struct NodeVec(newValue);
+    treeVec[0] = new struct NodeVec(newValue, 0, 0, 1, 2, this);
 
     heightVector[0] = 1;
 
-    treeVec[0]->index = 0;
-    treeVec[0]->height = 0;
-
-    treeVec[0]->left = 1;
-    treeVec[0]->right = 2;
-
-    treeVec[0]->refTree = this;
+    // treeVec[0]->index = 0;
+    // treeVec[0]->height = 0;
+    //
+    // treeVec[0]->left = 1;
+    // treeVec[0]->right = 2;
+    //
+    // treeVec[0]->refTree = this;
 
     size++;
   }
@@ -134,17 +160,17 @@
       treeVec[i] = nullptr;
 
 
-    treeVec[0] = new struct NodeVec(std::move(newValue));
+    treeVec[0] = new struct NodeVec(std::move(newValue), 0, 0, 1, 2, this);
 
     heightVector[0] = 1;
 
-    treeVec[0]->index = 0;
-    treeVec[0]->height = 0;
-
-    treeVec[0]->left = 1;
-    treeVec[0]->right = 2;
-
-    treeVec[0]->refTree = this;
+    // treeVec[0]->index = 0;
+    // treeVec[0]->height = 0;
+    //
+    // treeVec[0]->left = 1;
+    // treeVec[0]->right = 2;
+    //
+    // treeVec[0]->refTree = this;
 
     size++;
   }
@@ -161,15 +187,16 @@
 
     for(ulong i = 0; i < copyTree.treeVec.Size(); i++)
       if(copyTree.treeVec[i] != nullptr){
-        treeVec[i] = new struct NodeVec(copyTree.treeVec[i]->value);
+        treeVec[i] = new struct NodeVec(copyTree.treeVec[i]->value, copyTree.treeVec[i]->index,
+            copyTree.treeVec[i]->height, copyTree.treeVec[i]->left, copyTree.treeVec[i]->right, this);
 
-        treeVec[i]->index = copyTree.treeVec[i]->index;
-        treeVec[i]->height = copyTree.treeVec[i]->height;
-
-        treeVec[i]->left = copyTree.treeVec[i]->left;
-        treeVec[i]->right = copyTree.treeVec[i]->right;
-
-        treeVec[i]->refTree = this;
+        // treeVec[i]->index = copyTree.treeVec[i]->index;
+        // treeVec[i]->height = copyTree.treeVec[i]->height;
+        //
+        // treeVec[i]->left = copyTree.treeVec[i]->left;
+        // treeVec[i]->right = copyTree.treeVec[i]->right;
+        //
+        // treeVec[i]->refTree = this;
       }
 
     for(int i = 0; i < 100; i++)
@@ -213,15 +240,16 @@
 
     for(ulong i = 0; i < copyTree.treeVec.Size(); i++)
       if(copyTree.treeVec[i] != nullptr){
-        treeVec[i] = new struct NodeVec(copyTree.treeVec[i]->value);
+        treeVec[i] = new struct NodeVec(copyTree.treeVec[i]->value, copyTree.treeVec[i]->index,
+            copyTree.treeVec[i]->height, copyTree.treeVec[i]->left, copyTree.treeVec[i]->right, this);
 
-        treeVec[i]->index = copyTree.treeVec[i]->index;
-        treeVec[i]->height = copyTree.treeVec[i]->height;
-
-        treeVec[i]->left = copyTree.treeVec[i]->left;
-        treeVec[i]->right = copyTree.treeVec[i]->right;
-
-        treeVec[i]->refTree = this;
+        // treeVec[i]->index = copyTree.treeVec[i]->index;
+        // treeVec[i]->height = copyTree.treeVec[i]->height;
+        //
+        // treeVec[i]->left = copyTree.treeVec[i]->left;
+        // treeVec[i]->right = copyTree.treeVec[i]->right;
+        //
+        // treeVec[i]->refTree = this;
       }
 
     for(int i = 0; i < 100; i++)
@@ -261,17 +289,17 @@
   void BinaryTreeVec<Data>::NewRoot(const Data& newValue){
     Clear();
 
-    treeVec[0] = new struct NodeVec(newValue);
+    treeVec[0] = new struct NodeVec(newValue, 0, 0, 1, 2, this);
 
     heightVector[0] = 1;
 
-    treeVec[0]->index = 0;
-    treeVec[0]->height = 0;
-
-    treeVec[0]->left = 1;
-    treeVec[0]->right = 2;
-
-    treeVec[0]->refTree = this;
+    // treeVec[0]->index = 0;
+    // treeVec[0]->height = 0;
+    //
+    // treeVec[0]->left = 1;
+    // treeVec[0]->right = 2;
+    //
+    // treeVec[0]->refTree = this;
 
     size++;
   }
@@ -280,15 +308,15 @@
   void BinaryTreeVec<Data>::NewRoot(Data&& newValue){
     Clear();
 
-    treeVec[0] = new struct NodeVec(std::move(newValue));
+    treeVec[0] = new struct NodeVec(std::move(newValue), 0, 0, 1, 2, this);
 
     heightVector[0] = 1;
 
-    treeVec[0]->index = 0;
-    treeVec[0]->height = 0;
-
-    treeVec[0]->left = 1;
-    treeVec[0]->right = 2;
+    // treeVec[0]->index = 0;
+    // treeVec[0]->height = 0;
+    //
+    // treeVec[0]->left = 1;
+    // treeVec[0]->right = 2;
 
     treeVec[0]->refTree = this;
 
@@ -303,15 +331,16 @@
     if(node.height+1 > treeHeight)
       Expand();
 
-    treeVec[node.left] = new struct NodeVec(value);
+    treeVec[node.left] = new struct NodeVec(value, node.left, node.height+1, 2 * node.left + 1,
+        2 * node.left + 2, this);
 
-    treeVec[node.left]->index = node.left;
-    treeVec[node.left]->height = node.height+1;
-
-    treeVec[node.left]->left = 2 * node.left + 1;
-    treeVec[node.left]->right = 2 * node.left + 2;
-
-    treeVec[node.left]->refTree = this;
+    // treeVec[node.left]->index = node.left;
+    // treeVec[node.left]->height = node.height+1;
+    //
+    // treeVec[node.left]->left = 2 * node.left + 1;
+    // treeVec[node.left]->right = 2 * node.left + 2;
+    //
+    // treeVec[node.left]->refTree = this;
 
     size++;
 
@@ -329,15 +358,16 @@
     if(node.height+1 > treeHeight)
       Expand();
 
-    treeVec[node.left] = new struct NodeVec(std::move(value));
+    treeVec[node.left] = new struct NodeVec(std::move(value), node.left, node.height+1,
+        node.left * 2 + 1, node.left * 2 + 2, this);
 
-    treeVec[node.left]->index = node.left;
-    treeVec[node.left]->height = node.height+1;
-
-    treeVec[node.left]->left = node.left * 2 + 1;
-    treeVec[node.left]->right = node.left * 2 + 2;
-
-    treeVec[node.left]->refTree = this;
+    // treeVec[node.left]->index = node.left;
+    // treeVec[node.left]->height = node.height+1;
+    //
+    // treeVec[node.left]->left = node.left * 2 + 1;
+    // treeVec[node.left]->right = node.left * 2 + 2;
+    //
+    // treeVec[node.left]->refTree = this;
 
     size++;
 
@@ -355,15 +385,16 @@
     if(node.height+1 > treeHeight)
       Expand();
 
-    treeVec[node.right] = new struct NodeVec(value);
+    treeVec[node.right] = new struct NodeVec(value, node.right, node.height+1, node.right * 2 + 1,
+        node.right * 2 + 2, this);
 
-    treeVec[node.right]->index = node.right;
-    treeVec[node.right]->height = node.height+1;
-
-    treeVec[node.right]->left = node.right * 2 + 1;
-    treeVec[node.right]->right = node.right * 2 + 2;
-
-    treeVec[node.right]->refTree = this;
+    // treeVec[node.right]->index = node.right;
+    // treeVec[node.right]->height = node.height+1;
+    //
+    // treeVec[node.right]->left = node.right * 2 + 1;
+    // treeVec[node.right]->right = node.right * 2 + 2;
+    //
+    // treeVec[node.right]->refTree = this;
 
     size++;
 
@@ -381,15 +412,16 @@
     if(node.height+1 > treeHeight)
       Expand();
 
-    treeVec[node.right] = new struct NodeVec(std::move(value));
+    treeVec[node.right] = new struct NodeVec(std::move(value), node.right, node.height+1, node.right * 2 + 1,
+        node.right * 2 + 2, this);
 
-    treeVec[node.right]->index = node.right;
-    treeVec[node.right]->height = node.height+1;
-
-    treeVec[node.right]->left = node.right * 2 + 1;
-    treeVec[node.right]->right = node.right * 2 + 2;
-
-    treeVec[node.right]->refTree = this;
+    // treeVec[node.right]->index = node.right;
+    // treeVec[node.right]->height = node.height+1;
+    //
+    // treeVec[node.right]->left = node.right * 2 + 1;
+    // treeVec[node.right]->right = node.right * 2 + 2;
+    //
+    // treeVec[node.right]->refTree = this;
 
     size++;
 
