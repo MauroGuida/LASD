@@ -1,35 +1,28 @@
 
 template <typename Data>
 void Heap<Data>::BuildTree(const LinearContainer<Data>& LC){
+  while(LC.Size() > treeVec.Size())
+    BinaryTreeVec<Data>::Expand();
+
   if(LC.Size() > 0){
     treeVec[0] = new struct BinaryTreeVec<Data>::NodeVec(LC[0], 0, 0, 1, 2, this);
 
-    // treeVec[0]->index = 0;
-    // treeVec[0]->height = 0;
-    //
-    // treeVec[0]->left = 1;
-    // treeVec[0]->right = 2;
-    //
-    // treeVec[0]->refTree = this;
+    size++;
+    heightVector[0]++;
   }
 
   for(ulong i=1; i < LC.Size(); i++){
-    treeVec[i] = new struct BinaryTreeVec<Data>::NodeVec(LC[i], i, treeVec[i]->Parent().height + 1,
+    treeVec[i] = new struct BinaryTreeVec<Data>::NodeVec(LC[i], i, treeVec[(i-1)/2]->getHeight() + 1,
       2*i+1, 2*i+2, this);
 
-    // treeVec[i]->index = i;
-    // treeVec[i]->height = treeVec[i]->Parent().height + 1;
-    //
-    // treeVec[i]->left = 2 * i + 1;
-    // treeVec[i]->right = 2 * i + 2;
-    //
-    // treeVec[i]->refTree = this;
+      size++;
+      heightVector[treeVec[i]->getHeight()]++;
   }
 }
 
 template <typename Data>
 void Heap<Data>::BuildHeap(){
-  for(ulong i = size/2; i>0; i++)
+  for(ulong i = (size/2)-1; i>=0 && i < size; i--)
     Heapify(i, size);
 }
 
@@ -39,13 +32,13 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
   ulong r = 2 * index + 2;
   ulong max = index;
 
-  if(l <= heapSize && treeVec[l]->Element() > treeVec[index]->Element())
+  if(l < heapSize && treeVec[l] != nullptr && treeVec[l]->Element() > treeVec[index]->Element())
     max = l;
 
-  if(r <= heapSize && treeVec[r]->Element() > treeVec[max]->Element())
+  if(r < heapSize && treeVec[r] != nullptr && treeVec[r]->Element() > treeVec[max]->Element())
     max = r;
 
-  if(max != index){
+  if(max != index && treeVec[max] != nullptr){
     std::swap(treeVec[index]->Element(), treeVec[max]->Element());
     Heapify(max, heapSize);
   }
@@ -54,7 +47,7 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
 // Default constructor
   template <typename Data>
   Heap<Data>::Heap() : BinaryTreeVec<Data>::BinaryTreeVec(){
-
+    BinaryTreeVec<Data>::Clear();
   }
 
 // Specific constructor
@@ -93,7 +86,7 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
   void Heap<Data>::Sort() noexcept{
     ulong heapSize = size-1;
     BuildHeap();
-    for(ulong i = heapSize; i>0; i--){
+    for(ulong i = heapSize; i>=0 && i < size; i--){
       std::swap(treeVec[i]->Element(), treeVec[0]->Element());
       heapSize--;
       Heapify(0, heapSize);

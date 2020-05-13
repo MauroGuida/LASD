@@ -28,6 +28,7 @@ protected:
   using BinaryTreeVec<Data>::size;
 
   using BinaryTreeVec<Data>::treeVec;
+  using BinaryTreeVec<Data>::heightVector;
   using BinaryTreeVec<Data>::NodeVec;
 
   void BuildTree(const LinearContainer<Data>&);

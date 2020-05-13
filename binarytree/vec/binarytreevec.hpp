@@ -50,6 +50,7 @@ public:
 
   public:
 
+    // Constructor
     NodeVec(Data&&, ulong, ulong, ulong, ulong, BinaryTreeVec<Data>*);
     NodeVec(const Data&, ulong, ulong, ulong, ulong, BinaryTreeVec<Data>*);
 
@@ -79,6 +80,11 @@ public:
     struct NodeVec& LeftChild() const override; // Override Node member (might throw std::out_of_range)
     struct NodeVec& RightChild() const override; // Override Node member (might throw std::out_of_range)
 
+    //Getters
+    const ulong getIndex() const;
+    const ulong getHeight() const;
+    const ulong getLeft() const;
+    const ulong getRight() const;
   };
 
 protected:

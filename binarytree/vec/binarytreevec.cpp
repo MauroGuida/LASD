@@ -1,30 +1,52 @@
 
 // NodeVec
-template <typename Data>
-BinaryTreeVec<Data>::NodeVec::NodeVec(Data&& elem, ulong i, ulong h, ulong l, ulong r, BinaryTreeVec<Data>* ref){
-  value = std::move(elem);
+// Constructor
+  template <typename Data>
+  BinaryTreeVec<Data>::NodeVec::NodeVec(Data&& elem, ulong i, ulong h, ulong l, ulong r, BinaryTreeVec<Data>* ref){
+    value = std::move(elem);
 
-  index = i;
-  height = h;
+    index = i;
+    height = h;
 
-  left = l;
-  right = r;
+    left = l;
+    right = r;
 
-  refTree = ref;
-}
+    refTree = ref;
+  }
 
-template <typename Data>
-BinaryTreeVec<Data>::NodeVec::NodeVec(const Data& elem, ulong i, ulong h, ulong l, ulong r, BinaryTreeVec<Data>* ref){
-  value = elem;
+  template <typename Data>
+  BinaryTreeVec<Data>::NodeVec::NodeVec(const Data& elem, ulong i, ulong h, ulong l, ulong r, BinaryTreeVec<Data>* ref){
+    value = elem;
 
-  index = i;
-  height = h;
+    index = i;
+    height = h;
 
-  left = l;
-  right = r;
+    left = l;
+    right = r;
 
-  refTree = ref;
-}
+    refTree = ref;
+  }
+
+// Getters
+  template <typename Data>
+  const ulong BinaryTreeVec<Data>::NodeVec::getIndex() const{
+    return index;
+  }
+
+  template <typename Data>
+  const ulong BinaryTreeVec<Data>::NodeVec::getHeight() const{
+    return height;
+  }
+
+  template <typename Data>
+  const ulong BinaryTreeVec<Data>::NodeVec::getLeft() const{
+    return left;
+  }
+
+  template <typename Data>
+  const ulong BinaryTreeVec<Data>::NodeVec::getRight() const{
+    return right;
+  }
 
 // Specific member functions
   template <typename Data>
@@ -318,7 +340,7 @@ BinaryTreeVec<Data>::NodeVec::NodeVec(const Data& elem, ulong i, ulong h, ulong 
     // treeVec[0]->left = 1;
     // treeVec[0]->right = 2;
 
-    treeVec[0]->refTree = this;
+    // treeVec[0]->refTree = this;
 
     size++;
   }
