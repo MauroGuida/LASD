@@ -21,59 +21,61 @@ private:
 
 protected:
 
-  // using Heap<Data>::???;
+  using Heap<Data>::size;
+  using Heap<Data>::treeVec;
 
-  // ...
+  using Heap<Data>::heightVector;
+  using Heap<Data>::treeHeight;
+
+  using Heap<Data>::NodeVec;
 
 public:
 
   // Default constructor
-  // PriorityQueue() specifiers;
+  PriorityQueue() = default;
 
   // Specific constructor
-  // PriorityQueue(argument) specifiers; // Construct a priority queue from a LinearContainer
+  PriorityQueue(const LinearContainer<Data>&); // Construct a priority queue from a LinearContainer
 
   // Copy constructor
-  // PriorityQueue(argument) specifiers;
+  PriorityQueue(const PriorityQueue<Data>&);
 
   // Move constructor
-  // PriorityQueue(argument) specifiers;
+  PriorityQueue(PriorityQueue<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~PriorityQueue() specifiers;
+  ~PriorityQueue() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  PriorityQueue& operator=(const PriorityQueue&);
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  PriorityQueue& operator=(PriorityQueue&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator==(const PriorityQueue&) const noexcept;
+  bool operator!=(const PriorityQueue&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions
 
-  // using Heap<Data>::???;
+  using Heap<Data>::Root;
 
-  // using Heap<Data>::Root;
+  const Data& Tip() const; // (might throw std::length_error)
+  void RemoveTip(); // (might throw std::length_error)
+  Data TipNRemove(); // (might throw std::length_error)
+  void Insert(const Data&); // Copy of the value
+  void Insert(Data&&); // Move of the value
 
-  // type Tip() specifier; // (might throw std::length_error)
-  // type RemoveTip() specifier; // (might throw std::length_error)
-  // type TipNRemove() specifier; // (might throw std::length_error)
-  // type Insert(argument) specifier; // Copy of the value
-  // type Insert(argument) specifier; // Move of the value
-
-  // type ChangePriority(arguments) specifier; // Change priority of a Node (Copy of the value)
-  // type ChangePriority(arguments) specifier; // Change priority of a Node (Move of the value)
+  void ChangePriority(struct BinaryTreeVec<Data>::NodeVec&, const Data&); // Change priority of a Node (Copy of the value)
+  void ChangePriority(struct BinaryTreeVec<Data>::NodeVec&, Data&&); // Change priority of a Node (Move of the value)
 
 };
 

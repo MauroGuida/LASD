@@ -42,8 +42,8 @@ namespace lasd {
     /* ************************************************************************ */
 
     // Specific member functions
-    virtual inline bool Empty() const noexcept;
-    virtual inline ulong Size() const noexcept;
+    virtual inline bool Empty() const noexcept{ return (size == 0); }
+    virtual inline ulong Size() const noexcept{ return size; }
     virtual void Clear() = 0;
 
   };

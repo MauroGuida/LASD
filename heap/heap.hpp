@@ -26,6 +26,7 @@ protected:
   // using SearchableContainer<Data>::???;
 
   using BinaryTreeVec<Data>::size;
+  using BinaryTreeVec<Data>::treeHeight;
 
   using BinaryTreeVec<Data>::treeVec;
   using BinaryTreeVec<Data>::heightVector;
@@ -67,8 +68,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  // bool operator==(const Heap<Data>&) const noexcept;
-  // bool operator!=(Heap<Data>&&) const noexcept;
+  bool operator==(const Heap<Data>&) const noexcept;
+  bool operator!=(Heap<Data>&&) const noexcept;
 
   /* ************************************************************************ */
 

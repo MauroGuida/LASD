@@ -1,12 +1,12 @@
 
 // Specific member functions (Container)
-  inline bool Container::Empty() const noexcept{
-    return (size == 0);
-  }
-
-  inline ulong Container::Size() const noexcept{
-    return size;
-  }
+  // inline bool Container::Empty() const noexcept{
+  //   return (size == 0);
+  // }
+  //
+  // inline ulong Container::Size() const noexcept{
+  //   return size;
+  // } MOVED IN HPP
 
 /* ************************************************************************** */
 

@@ -17,6 +17,9 @@ void Heap<Data>::BuildTree(const LinearContainer<Data>& LC){
 
       size++;
       heightVector[treeVec[i]->getHeight()]++;
+
+      if(treeVec[i]->getHeight() > treeHeight)
+        treeHeight = treeVec[i]->getHeight();
   }
 }
 
@@ -30,17 +33,17 @@ template <typename Data>
 void Heap<Data>::Heapify(ulong index, ulong heapSize){
   ulong l = 2 * index + 1;
   ulong r = 2 * index + 2;
-  ulong max = index;
+  ulong min = index;
 
-  if(l < heapSize && treeVec[l] != nullptr && treeVec[l]->Element() > treeVec[index]->Element())
-    max = l;
+  if(l < heapSize && treeVec[l] != nullptr && treeVec[l]->Element() < treeVec[index]->Element())
+    min = l;
 
-  if(r < heapSize && treeVec[r] != nullptr && treeVec[r]->Element() > treeVec[max]->Element())
-    max = r;
+  if(r < heapSize && treeVec[r] != nullptr && treeVec[r]->Element() < treeVec[min]->Element())
+    min = r;
 
-  if(max != index && treeVec[max] != nullptr){
-    std::swap(treeVec[index]->Element(), treeVec[max]->Element());
-    Heapify(max, heapSize);
+  if(min != index && treeVec[min] != nullptr){
+    std::swap(treeVec[index]->Element(), treeVec[min]->Element());
+    Heapify(min, heapSize);
   }
 }
 
@@ -69,51 +72,83 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
 
   }
 
+// Comparison operators
+  template <typename Data>
+  bool Heap<Data>::operator==(const Heap<Data>& eq) const noexcept{
+    return BinaryTreeVec<Data>::operator==(eq);
+  }
+
+  template <typename Data>
+  bool Heap<Data>::operator!=(Heap<Data>&& eq) const noexcept{
+    return BinaryTreeVec<Data>::operator!=(eq);
+  }
+
 // Copy assignment
   template <typename Data>
   Heap<Data>& Heap<Data>::operator=(const Heap<Data>& copyFrom){
-    return BinaryTreeVec<Data>::operetor=(copyFrom);
+    BinaryTreeVec<Data>::operetor=(copyFrom);
+    return *this;
   }
 
 // Move assignment
   template <typename Data>
   Heap<Data>& Heap<Data>::operator=(Heap<Data>&& moveFrom) noexcept{
-    return BinaryTreeVec<Data>::operetor=(moveFrom);
+    BinaryTreeVec<Data>::operetor=(moveFrom);
+    return *this;
   }
 
 // Specific member functions
   template <typename Data>
   void Heap<Data>::Sort() noexcept{
-    ulong heapSize = size-1;
+    ulong heapSize = size;
     BuildHeap();
-    for(ulong i = heapSize; i>=0 && i < size; i--){
+    for(ulong i = size - 1; i>=0 && i < size; i--){
       std::swap(treeVec[i]->Element(), treeVec[0]->Element());
       heapSize--;
       Heapify(0, heapSize);
     }
+
+    ulong i = 0;
+    ulong j = size - 1;
+    Data temp;
+    while(i < j){
+  		temp = treeVec[i]->Element();
+  		treeVec[i]->Element() = treeVec[j]->Element();
+  		treeVec[j]->Element() = temp;
+  		i++;
+  		j--;
+  	}
   }
 
 // Specific member functions (inherited from SearchableContainer)
   template <typename Data>
   void Heap<Data>::MapPreOrder(MapFunctor funct, void* par){
     for(ulong i = 0; i < size; i++)
-      funct(treeVec[i]->Element(), par);
+      if(treeVec[i] != nullptr)
+        funct(treeVec[i]->Element(), par);
+
+    BuildHeap();
   }
 
   template <typename Data>
   void Heap<Data>::MapPostOrder(MapFunctor funct, void* par){
-    for(ulong i = size; i>=0 && i < size; i++)
-      funct(treeVec[i]->Element(), par);
+    for(ulong i = size-1; i>=0 && i < size; i--)
+      if(treeVec[i] != nullptr)
+        funct(treeVec[i]->Element(), par);
+
+    BuildHeap();
   }
 
   template <typename Data>
   void Heap<Data>::FoldPreOrder(FoldFunctor funct, const void* cPar, void* par) const{
     for(ulong i = 0; i < size; i++)
-      funct(treeVec[i]->Element(), cPar, par);
+      if(treeVec[i] != nullptr)
+        funct(treeVec[i]->Element(), cPar, par);
   }
 
   template <typename Data>
   void Heap<Data>::FoldPostOrder(FoldFunctor funct, const void* cPar, void* par) const{
-    for(ulong i = size; i>=0 && i < size; i++)
-      funct(treeVec[i]->Element(), cPar, par);
+    for(ulong i = size-1; i>=0 && i < size; i--)
+      if(treeVec[i] != nullptr)
+        funct(treeVec[i]->Element(), cPar, par);
   }
