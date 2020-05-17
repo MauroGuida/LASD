@@ -62,13 +62,18 @@
     delete treeVec[size-1];
     treeVec[size-1] = nullptr;
 
+    size--;
     heightVector[H]--;
+
     if(heightVector[H] == 0){
-      treeHeight--;
+      if(treeHeight > 0)
+        treeHeight--;
 
       if(treeHeight > 2)
         BinaryTreeVec<Data>::Reduce();
     }
+
+    Heap<Data>::Heapify(0, size);
   }
 
   template <typename Data>
@@ -84,13 +89,19 @@
     if(size+1 >= treeVec.Size())
       BinaryTreeVec<Data>::Expand();
 
-    size++;
-    treeVec[size] = new struct BinaryTreeVec<Data>::NodeVec(value, size, treeVec[(size-1)/2]->getHeight() + 1, 2*size+1, 2*size+2, this);
+    if(size == 0)
+      treeVec[size] = new struct BinaryTreeVec<Data>::NodeVec(value, size, 0, 2*size+1, 2*size+2, this);
+    else
+      treeVec[size] = new struct BinaryTreeVec<Data>::NodeVec(value, size, treeVec[(size-1)/2]->getHeight() + 1, 2*size+1, 2*size+2, this);
 
-    heightVector[treeVec[size]->getHeight()]++;
 
     if(treeVec[size]->getHeight() > treeHeight)
       treeHeight = treeVec[size]->getHeight();
+
+
+    heightVector[treeVec[size]->getHeight()]++;
+    size++;
+
 
     Heap<Data>::BuildHeap();
   }
@@ -100,13 +111,19 @@
     if(size+1 >= treeVec.Size())
       BinaryTreeVec<Data>::Expand();
 
-    size++;
-    treeVec[size] = new struct BinaryTreeVec<Data>::NodeVec(std::move(value), size, treeVec[(size-1)/2]->getHeight() + 1, 2*size+1, 2*size+2, this);
+    if(size == 0)
+      treeVec[size] = new struct BinaryTreeVec<Data>::NodeVec(std::move(value), size, 0, 2*size+1, 2*size+2, this);
+    else
+      treeVec[size] = new struct BinaryTreeVec<Data>::NodeVec(std::move(value), size, treeVec[(size-1)/2]->getHeight() + 1, 2*size+1, 2*size+2, this);
 
-    heightVector[treeVec[size]->getHeight()]++;
 
     if(treeVec[size]->getHeight() > treeHeight)
       treeHeight = treeVec[size]->getHeight();
+
+
+    heightVector[treeVec[size]->getHeight()]++;
+    size++;
+
 
     Heap<Data>::BuildHeap();
   }

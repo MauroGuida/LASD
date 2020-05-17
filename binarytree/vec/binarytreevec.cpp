@@ -480,7 +480,8 @@
       if(treeHeight > 2)
         Reduce();
 
-      treeHeight--;
+      if(treeHeight > 0)
+        treeHeight--;
     }
   }
 
