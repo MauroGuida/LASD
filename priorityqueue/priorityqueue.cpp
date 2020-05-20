@@ -13,7 +13,7 @@
 
 // Move constructor
   template <typename Data>
-  PriorityQueue<Data>::PriorityQueue(PriorityQueue<Data>&& moveFrom) noexcept : Heap<Data>::Heap(moveFrom){
+  PriorityQueue<Data>::PriorityQueue(PriorityQueue<Data>&& moveFrom) noexcept : Heap<Data>::Heap(std::move(moveFrom)){
 
   }
 

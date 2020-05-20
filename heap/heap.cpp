@@ -68,7 +68,7 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
 
 // Move constructor
   template <typename Data>
-  Heap<Data>::Heap(Heap<Data>&& moveFrom) noexcept : BinaryTreeVec<Data>::BinaryTreeVec(moveFrom){
+  Heap<Data>::Heap(Heap<Data>&& moveFrom) noexcept : BinaryTreeVec<Data>::BinaryTreeVec(std::move(moveFrom)){
 
   }
 

@@ -77,21 +77,6 @@ public:
   void ChangePriority(struct BinaryTreeVec<Data>::NodeVec&, const Data&); // Change priority of a Node (Copy of the value)
   void ChangePriority(struct BinaryTreeVec<Data>::NodeVec&, Data&&); // Change priority of a Node (Move of the value)
 
-
-  // void stampaAltezza(){
-  //   std::cout << "Altezza albero: " << treeHeight << std::endl;
-  // }
-  //
-  // void stampaVettoreAltezza(){
-  //   for(int i = 0; i < 100; i++)
-  //     std::cout << heightVector[i] << " ";
-  //
-  //   std::cout << std::endl;
-  // }
-  //
-  // void stampaSize(){
-  //   std::cout << "Size albero: " << size << std::endl;
-  // }
 };
 
 /* ************************************************************************** */
