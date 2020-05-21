@@ -52,7 +52,7 @@ using namespace lasd;
 
       if(flag && !(T1.HasRightChild() ^ T2.HasRightChild())){
         if(T1.HasRightChild() && T2.HasRightChild())
-          return flag && equals(T1.RightChild(), T2.RightChild());
+          return equals(T1.RightChild(), T2.RightChild());
         else
           return true;
       }else
