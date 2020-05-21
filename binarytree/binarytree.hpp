@@ -5,6 +5,9 @@
 /* ************************************************************************** */
 
 #include "../container/container.hpp"
+#include "../queue/queue.hpp"
+#include "../queue/vec/queuevec.hpp"
+#include "../queue/lst/queuelst.hpp"
 
 /* ************************************************************************** */
 

@@ -1,8 +1,4 @@
 
-#include "../queue/queue.hpp"
-#include "../queue/vec/queuevec.hpp"
-#include "../queue/lst/queuelst.hpp"
-
 using namespace lasd;
 /* ************************************************************************** */
 
@@ -45,21 +41,22 @@ using namespace lasd;
       if(T1 != T2)
         return false;
 
-      bool flag = true;
+      bool flag = false;
       if(!(T1.HasLeftChild() ^ T2.HasLeftChild())){
         if(T1.HasLeftChild() && T2.HasLeftChild())
           flag = equals(T1.LeftChild(), T2.LeftChild());
-        // else
-        //   flag = true;
+        else
+          flag = true;
       }
 
 
-      if(!(T1.HasRightChild() ^ T2.HasRightChild())){
+      if(flag && !(T1.HasRightChild() ^ T2.HasRightChild())){
         if(T1.HasRightChild() && T2.HasRightChild())
           return flag && equals(T1.RightChild(), T2.RightChild());
-        // else
-        //   return flag;
-      }
+        else
+          return true;
+      }else
+        flag = false;
 
       return flag;
     }
