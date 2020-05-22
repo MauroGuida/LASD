@@ -69,7 +69,9 @@ public:
 
   // Comparison operators
   bool operator==(const Heap<Data>&) const noexcept;
-  bool operator!=(Heap<Data>&&) const noexcept;
+  bool operator!=(const Heap<Data>&) const noexcept;
+  using BinaryTree<Data>::operator==;
+  using BinaryTree<Data>::operator!=;
 
   /* ************************************************************************ */
 

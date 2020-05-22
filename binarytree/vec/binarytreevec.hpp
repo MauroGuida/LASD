@@ -96,7 +96,7 @@ protected:
 public:
 
   // Default constructor
-  BinaryTreeVec() = default;
+  BinaryTreeVec();
 
   // Specific constructors
   BinaryTreeVec(const Data&); // Construct a tree with a given root data (Copy of the value)

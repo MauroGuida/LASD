@@ -146,6 +146,17 @@
   }
 
 // BinaryTreeVec
+// Default constructor
+  template <typename Data>
+  BinaryTreeVec<Data>::BinaryTreeVec(){
+    for(int i = 0; i < 100; i++)
+      heightVector[i] = 0;
+
+    treeVec.Resize(7);
+    for(int i = 0; i < 7; i++)
+      treeVec[i] = nullptr;
+  }
+
 // Specific constructors
   template <typename Data>
   BinaryTreeVec<Data>::BinaryTreeVec(const Data& newValue){

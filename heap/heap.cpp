@@ -41,7 +41,7 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
   if(r < heapSize && treeVec[r] != nullptr && treeVec[r]->Element() < treeVec[min]->Element())
     min = r;
 
-  if(min != index && treeVec[min] != nullptr){
+  if(min != index){
     std::swap(treeVec[index]->Element(), treeVec[min]->Element());
     Heapify(min, heapSize);
   }
@@ -50,7 +50,7 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
 // Default constructor
   template <typename Data>
   Heap<Data>::Heap() : BinaryTreeVec<Data>::BinaryTreeVec(){
-    BinaryTreeVec<Data>::Clear();
+    // BinaryTreeVec<Data>::Clear();
   }
 
 // Specific constructor
@@ -79,7 +79,7 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
   }
 
   template <typename Data>
-  bool Heap<Data>::operator!=(Heap<Data>&& eq) const noexcept{
+  bool Heap<Data>::operator!=(const Heap<Data>& eq) const noexcept{
     return BinaryTreeVec<Data>::operator!=(eq);
   }
 
@@ -93,7 +93,7 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
 // Move assignment
   template <typename Data>
   Heap<Data>& Heap<Data>::operator=(Heap<Data>&& moveFrom) noexcept{
-    BinaryTreeVec<Data>::operetor=(moveFrom);
+    BinaryTreeVec<Data>::operetor=(std::move(moveFrom));
     return *this;
   }
 
@@ -102,6 +102,7 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
   void Heap<Data>::Sort() noexcept{
     ulong heapSize = size;
     BuildHeap();
+
     for(ulong i = size - 1; i>=0 && i < size; i--){
       std::swap(treeVec[i]->Element(), treeVec[0]->Element());
       heapSize--;

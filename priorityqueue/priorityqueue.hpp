@@ -59,8 +59,10 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const PriorityQueue&) const noexcept;
-  bool operator!=(const PriorityQueue&) const noexcept;
+  bool operator==(const PriorityQueue<Data>&) const noexcept;
+  bool operator!=(const PriorityQueue<Data>&) const noexcept;
+  using BinaryTree<Data>::operator==;
+  using BinaryTree<Data>::operator!=;
 
   /* ************************************************************************ */
 

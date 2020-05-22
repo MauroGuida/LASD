@@ -27,18 +27,18 @@
 // Move assignment
   template <typename Data>
   PriorityQueue<Data>& PriorityQueue<Data>::operator=(PriorityQueue&& moveFrom) noexcept{
-    Heap<Data>::operetor=(moveFrom);
+    Heap<Data>::operetor=(std::move(moveFrom));
     return *this;
   }
 
 // Comparison operators
   template <typename Data>
-  bool PriorityQueue<Data>::operator==(const PriorityQueue& eq) const noexcept{
+  bool PriorityQueue<Data>::operator==(const PriorityQueue<Data>& eq) const noexcept{
     return Heap<Data>::operator==(eq);
   }
 
   template <typename Data>
-  bool PriorityQueue<Data>::operator!=(const PriorityQueue& eq) const noexcept{
+  bool PriorityQueue<Data>::operator!=(const PriorityQueue<Data>& eq) const noexcept{
     return Heap<Data>::operator!=(eq);
   }
 
