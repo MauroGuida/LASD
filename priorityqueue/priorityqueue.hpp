@@ -32,7 +32,7 @@ protected:
 public:
 
   // Default constructor
-  PriorityQueue() = default;
+  PriorityQueue();
 
   // Specific constructor
   PriorityQueue(const LinearContainer<Data>&); // Construct a priority queue from a LinearContainer

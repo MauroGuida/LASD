@@ -25,6 +25,9 @@ void Heap<Data>::BuildTree(const LinearContainer<Data>& LC){
 
 template <typename Data>
 void Heap<Data>::BuildHeap(){
+  if(size == 0)
+    return;
+
   for(ulong i = (size/2)-1; i>=0 && i < size; i--)
     Heapify(i, size);
 }
@@ -86,20 +89,23 @@ void Heap<Data>::Heapify(ulong index, ulong heapSize){
 // Copy assignment
   template <typename Data>
   Heap<Data>& Heap<Data>::operator=(const Heap<Data>& copyFrom){
-    BinaryTreeVec<Data>::operetor=(copyFrom);
+    BinaryTreeVec<Data>::operator=(copyFrom);
     return *this;
   }
 
 // Move assignment
   template <typename Data>
   Heap<Data>& Heap<Data>::operator=(Heap<Data>&& moveFrom) noexcept{
-    BinaryTreeVec<Data>::operetor=(std::move(moveFrom));
+    BinaryTreeVec<Data>::operator=(std::move(moveFrom));
     return *this;
   }
 
 // Specific member functions
   template <typename Data>
   void Heap<Data>::Sort() noexcept{
+    if(size == 0)
+      return;
+
     ulong heapSize = size;
     BuildHeap();
 

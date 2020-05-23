@@ -14,7 +14,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class BinaryTreeVec : virtual public BinaryTree<Data> { // Should extend BinaryTree<Data>
+class BinaryTreeVec : public BinaryTree<Data> { // Should extend BinaryTree<Data>
 
 private:
 
@@ -119,7 +119,7 @@ public:
   BinaryTreeVec& operator=(const BinaryTreeVec<Data>&);
 
   // Move assignment
-  BinaryTreeVec& operator=(BinaryTreeVec&&) noexcept;
+  BinaryTreeVec& operator=(BinaryTreeVec<Data>&&) noexcept;
 
   /* ************************************************************************ */
 

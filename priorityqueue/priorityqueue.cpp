@@ -1,4 +1,10 @@
 
+// Default constructor
+  template <typename Data>
+  PriorityQueue<Data>::PriorityQueue() : Heap<Data>::Heap(){
+
+  }
+
 // Specific constructor
   template <typename Data>
   PriorityQueue<Data>::PriorityQueue(const LinearContainer<Data>& LC) : Heap<Data>::Heap(LC){
@@ -20,14 +26,14 @@
 // Copy assignment
   template <typename Data>
   PriorityQueue<Data>& PriorityQueue<Data>::operator=(const PriorityQueue& copyFrom){
-    Heap<Data>::operetor=(copyFrom);
+    Heap<Data>::operator=(copyFrom);
     return *this;
   }
 
 // Move assignment
   template <typename Data>
   PriorityQueue<Data>& PriorityQueue<Data>::operator=(PriorityQueue&& moveFrom) noexcept{
-    Heap<Data>::operetor=(std::move(moveFrom));
+    Heap<Data>::operator=(std::move(moveFrom));
     return *this;
   }
 
@@ -132,14 +138,13 @@
   void PriorityQueue<Data>::ChangePriority(struct BinaryTreeVec<Data>::NodeVec& refNode, const Data& copyValue){
     if(refNode.Element() < copyValue){
       refNode.Element() = copyValue;
-
       Heap<Data>::Heapify(refNode.getIndex(), size);
     }else if(refNode.Element() > copyValue){
       refNode.Element() = copyValue;
       struct BinaryTreeVec<Data>::NodeVec* temp = &refNode;
 
-      while(refNode.HasParent() && refNode.Parent().Element() > refNode.Element()){
-        std::swap(refNode.Parent().Element(), refNode.Element());
+      while(temp->HasParent() && temp->Parent().Element() > temp->Element()){
+        std::swap(temp->Parent().Element(), temp->Element());
         temp = &refNode.Parent();
       }
     }
@@ -149,14 +154,13 @@
   void PriorityQueue<Data>::ChangePriority(struct BinaryTreeVec<Data>::NodeVec& refNode, Data&& moveValue){
     if(refNode.Element() < moveValue){
       refNode.Element() = std::move(moveValue);
-
       Heap<Data>::Heapify(refNode.getIndex(), size);
     }else if(refNode.Element() > moveValue){
       refNode.Element() = std::move(moveValue);
       struct BinaryTreeVec<Data>::NodeVec* temp = &refNode;
 
-      while(refNode.HasParent() && refNode.Parent().Element() > refNode.Element()){
-        std::swap(refNode.Parent().Element(), refNode.Element());
+      while(temp->HasParent() && temp->Parent().Element() > temp->Element()){
+        std::swap(temp->Parent().Element(), temp->Element());
         temp = &refNode.Parent();
       }
     }
