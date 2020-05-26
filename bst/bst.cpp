@@ -41,24 +41,22 @@ struct BST<Data>::BSTNode* BST<Data>::BSTNode::Find(struct BSTNode* node, const 
 
 template <typename Data>
 struct BST<Data>::BSTNode* BST<Data>::BSTNode::FindParent(struct BSTNode* node, const Data& SearchValue) const{
-  if(node->value == SearchValue)
-    return nullptr;
+  if(node != nullptr && node->value != SearchValue)
+    while (node != nullptr && !node->IsLeaf()) {
+      if(node->HasLeftChild())
+        if(node->LeftChild()->value == SearchValue)
+          return node;
 
-  while (node != nullptr) {
-    if(node->HasLeftChild())
-      if(node->LeftChild()->value == SearchValue)
-        return node;
-
-    if(node->HasRightChild())
-      if(node->RightChild()->value == SearchValue)
-        return node;
+      if(node->HasRightChild())
+        if(node->RightChild()->value == SearchValue)
+          return node;
 
 
-    if(SearchValue > node->value)
-      node = node->Right();
-    else
-      node = node->Left();
-  }
+      if(SearchValue > node->value)
+        node = node->Right();
+      else
+        node = node->Left();
+    }
 
   return nullptr;
 }
@@ -95,5 +93,40 @@ struct BST<Data>::BSTNode* BST<Data>::BSTNode::SuccessorParent(const Data& value
 
 
 /* ************************************************************************** */
+
+// Copy constructor
+  template <typename Data>
+  BST<Data>::BST(const Data& copyFrom) : BinaryTreeLnk<Data>::BinaryTreeLnk(copyFrom){
+
+  }
+
+// Move constructor
+  template <typename Data>
+  BST<Data>::BST(Data&& moveFrom) noexcept : BinaryTreeLnk<Data>::BinaryTreeLnk(std::move(moveFrom)){
+
+  }
+
+// Copy assignment
+  template <typename Data>
+  BST& BST<Data>::operator=(const BST<Data>& copyFrom){
+    return BinaryTreeLnk<Data>::operator=(copyFrom);
+  }
+
+// Move assignment
+  template <typename Data>
+  BST& BST<Data>::operator=(BST<Data>&& moveFrom) noexcept{
+    return BinaryTreeLnk<Data>::operator=(std::move(moveFrom));
+  }
+
+// Comparison operators
+  template <typename Data>
+  bool BST<Data>::operator==(const BST<Data>& comp) const noexcept{
+
+  }
+
+  template <typename Data>
+  bool BST<Data>::operator!=(const BST<Data>& comp) const noexcept{
+    return !(*this == comp);
+  }
 
 }

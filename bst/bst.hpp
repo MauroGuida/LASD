@@ -13,7 +13,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class BST : virtual public BinaryTreeLnk<Data> {
+class BST : virtual protected BinaryTreeLnk<Data> {
 
 private:
 
@@ -22,8 +22,6 @@ private:
 protected:
 
   using BinaryTreeLnk<Data>::size;
-
-  // ...
 
 public:
 
@@ -74,10 +72,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  BST& operator=(const Data&);
+  BST& operator=(const BST<Data>&);
 
   // Move assignment
-  BST& operator=(Data&&) noexcept;
+  BST& operator=(BST<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
