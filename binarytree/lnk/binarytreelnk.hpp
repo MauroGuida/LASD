@@ -35,8 +35,8 @@ public:
 
     protected:
 
-      struct NodeLnk* Left = nullptr;
-      struct NodeLnk* Right = nullptr;
+      struct NodeLnk* left = nullptr;
+      struct NodeLnk* right = nullptr;
 
       using BinaryTree<Data>::Node::value;
       using BinaryTree<Data>::Node::Node;
@@ -57,7 +57,7 @@ public:
 
       struct NodeLnk& LeftChild() const override; // Override Node member (might throw std::out_of_range)
       struct NodeLnk& RightChild() const override; // Override Node member (might throw std::out_of_range)
-      
+
   };
 
 protected:

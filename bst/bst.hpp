@@ -1,3 +1,4 @@
+#include <iostream> //ANCORA UNA VOLTA SERVE, MA NON NE CAPISCO IL MOTIVO
 
 #ifndef BST_HPP
 #define BST_HPP
@@ -5,6 +6,7 @@
 /* ************************************************************************** */
 
 #include "../binarytree/lnk/binarytreelnk.hpp"
+#include "../queue/lst/queuelst.hpp"
 
 /* ************************************************************************** */
 
@@ -22,6 +24,7 @@ private:
 protected:
 
   using BinaryTreeLnk<Data>::size;
+  using BinaryTreeLnk<Data>::root;
 
 public:
 
@@ -32,6 +35,9 @@ public:
     // ...
 
   protected:
+
+    using BinaryTreeLnk<Data>::NodeLnk::left;
+    using BinaryTreeLnk<Data>::NodeLnk::right;
 
     struct BSTNode* Left();
     const struct BSTNode* Left() const;
@@ -49,6 +55,7 @@ public:
 
   public:
 
+    using BinaryTreeLnk<Data>::NodeLnk::NodeLnk;
     friend class BST<Data>;
 
   };
@@ -95,6 +102,7 @@ public:
   // Specific member functions
   void Insert(const Data&);
   void Insert(Data&&);
+
   void Remove(const Data&);
 
   struct BSTNode& Min() const;
@@ -121,11 +129,20 @@ public:
 protected:
 
   void Remove(const struct BSTNode&);
-  void RemoveMin();
-  void RemoveMax();
+  // void RemoveMin();
+  // void RemoveMax();
   void SkipOnLeft(const struct BSTNode*);
   void SkipOnRight(const struct BSTNode*);
 
+  /* ************************************************************************ */
+
+  QueueLst<Data>& enqueueTreeInOrder();
+    void mapEnqueueTree(Data&, void*);
+
+  struct BSTNode* InsertNode(struct BSTNode*, const Data&);
+  struct BSTNode* InsertNode(struct BSTNode*, Data&&);
+
+  bool Search(struct BSTNode*, const Data&) const noexcept;
 };
 
 }

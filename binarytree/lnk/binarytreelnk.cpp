@@ -16,28 +16,28 @@
 
   template <typename Data>
   bool BinaryTreeLnk<Data>::NodeLnk::HasLeftChild() const noexcept{
-    return (Left != nullptr);
+    return (left != nullptr);
   }
 
   template <typename Data>
   bool BinaryTreeLnk<Data>::NodeLnk::HasRightChild() const noexcept{
-    return (Right != nullptr);
+    return (right != nullptr);
   }
 
   template <typename Data>
   struct BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::LeftChild() const{
-    if(Left == nullptr)
+    if(left == nullptr)
       throw std::length_error("Empty Child!");
 
-    return *Left;
+    return *left;
   }
 
   template <typename Data>
   struct BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::RightChild() const{
-    if(Right == nullptr)
+    if(right == nullptr)
       throw std::length_error("Empty Child!");
 
-    return *Right;
+    return *right;
   }
 
 // BinaryTreeLnk
@@ -134,7 +134,7 @@
     if(mainNode.HasLeftChild())
       RemoveLeftChild(mainNode);
 
-    mainNode.Left = new struct NodeLnk(newChildData);
+    mainNode.left = new struct NodeLnk(newChildData);
     size++;
   }
 
@@ -143,7 +143,7 @@
     if(mainNode.HasLeftChild())
       RemoveLeftChild(mainNode);
 
-    mainNode.Left = new struct NodeLnk(std::move(newChildData));
+    mainNode.left = new struct NodeLnk(std::move(newChildData));
     size++;
   }
 
@@ -152,7 +152,7 @@
     if(mainNode.HasRightChild())
       RemoveRightChild(mainNode);
 
-    mainNode.Right = new struct NodeLnk(newChildData);
+    mainNode.right = new struct NodeLnk(newChildData);
     size++;
   }
 
@@ -161,20 +161,20 @@
     if(mainNode.HasRightChild())
       RemoveRightChild(mainNode);
 
-    mainNode.Right = new struct NodeLnk(std::move(newChildData));
+    mainNode.right = new struct NodeLnk(std::move(newChildData));
     size++;
   }
 
   template <typename Data>
   void BinaryTreeLnk<Data>::RemoveLeftChild(struct NodeLnk& node){
-    RemoveSubtree(node.Left);
-    node.Left = nullptr;
+    RemoveSubtree(node.left);
+    node.left = nullptr;
   }
 
   template <typename Data>
   void BinaryTreeLnk<Data>::RemoveRightChild(struct NodeLnk& node){
-    RemoveSubtree(node.Right);
-    node.Right = nullptr;
+    RemoveSubtree(node.right);
+    node.right = nullptr;
   }
 
   template <typename Data>
@@ -186,8 +186,8 @@
   template <typename Data>
   void BinaryTreeLnk<Data>::RemoveSubtree(struct NodeLnk* node){
     if(node != nullptr){
-      RemoveSubtree(node->Left);
-      RemoveSubtree(node->Right);
+      RemoveSubtree(node->left);
+      RemoveSubtree(node->right);
       delete node;
       if(size > 0)
         size--;
@@ -200,8 +200,8 @@
       return nullptr;
 
     struct NodeLnk* tmp = new NodeLnk(copyTree->Element());
-    tmp->Left = copySubtree(copyTree->Left);
-    tmp->Right = copySubtree(copyTree->Right);
+    tmp->left = copySubtree(copyTree->left);
+    tmp->right = copySubtree(copyTree->right);
 
     size++;
 
