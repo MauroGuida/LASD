@@ -69,44 +69,68 @@ using namespace lasd;
 // Specific member functions
   template <typename Data>
   void BinaryTree<Data>::MapInOrder(MapFunctor func, void* par){
-    MapInOrder(func, par, Root());
+    try{
+      MapInOrder(func, par, Root());
+    }catch(std::length_error e){
+    }catch(std::out_of_range e){} // No error for Empty Trees
   }
 
   template <typename Data>
   void BinaryTree<Data>::FoldInOrder(FoldFunctor func, const void* cPar, void* par) const{
-    FoldInOrder(func, cPar, par, Root());
+    try{
+      FoldInOrder(func, cPar, par, Root());
+    }catch(std::length_error e){
+    }catch(std::out_of_range e){} // No error for Empty Trees
   }
 
 // Specific member functions (inherited from SearchableContainer)
   template <typename Data>
   void BinaryTree<Data>::MapPreOrder(MapFunctor func, void* par){
-    MapPreOrder(func, par, Root());
+    try{
+      MapPreOrder(func, par, Root());
+    }catch(std::length_error e){
+    }catch(std::out_of_range e){} // No error for Empty Trees
   }
 
   template <typename Data>
   void BinaryTree<Data>::MapPostOrder(MapFunctor func, void* par){
-    MapPostOrder(func, par, Root());
+    try{
+      MapPostOrder(func, par, Root());
+    }catch(std::length_error e){
+    }catch(std::out_of_range e){} // No error for Empty Trees
   }
 
   template <typename Data>
   void BinaryTree<Data>::FoldPreOrder(FoldFunctor func, const void* cPar, void* par) const{
-    FoldPreOrder(func, cPar, par, Root());
+    try{
+      FoldPreOrder(func, cPar, par, Root());
+    }catch(std::length_error e){
+    }catch(std::out_of_range e){} // No error for Empty Trees
   }
 
   template <typename Data>
   void BinaryTree<Data>::FoldPostOrder(FoldFunctor func, const void* cPar, void* par) const{
-    FoldPostOrder(func, cPar, par, Root());
+    try{
+      FoldPostOrder(func, cPar, par, Root());
+    }catch(std::length_error e){
+    }catch(std::out_of_range e){} // No error for Empty Trees
   }
 
 // Specific member functions (inherited from BreadthSearchableContainer)
   template <typename Data>
   void BinaryTree<Data>::MapBreadth(MapFunctor func, void* par){
-    MapBreadth(func, par, Root());
+    try{
+      MapBreadth(func, par, Root());
+    }catch(std::length_error e){
+    }catch(std::out_of_range e){} // No error for Empty Trees
   }
 
   template <typename Data>
   void BinaryTree<Data>::FoldBreadth(FoldFunctor func, const void* cPar, void* par) const{
-    FoldBreadth(func, cPar, par, Root());
+    try{
+      FoldBreadth(func, cPar, par, Root());
+    }catch(std::length_error e){
+    }catch(std::out_of_range e){} // No error for Empty Trees
   }
 
 // Accessory function

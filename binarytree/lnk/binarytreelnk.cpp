@@ -11,7 +11,7 @@
 
   template <typename Data>
   bool BinaryTreeLnk<Data>::NodeLnk::IsLeaf() const noexcept{
-    return !(HasLeftChild() && HasRightChild());
+    return !(HasLeftChild() || HasRightChild());
   }
 
   template <typename Data>

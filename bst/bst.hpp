@@ -36,22 +36,10 @@ public:
 
   protected:
 
-    using BinaryTreeLnk<Data>::NodeLnk::left;
-    using BinaryTreeLnk<Data>::NodeLnk::right;
-
     struct BSTNode* Left();
     const struct BSTNode* Left() const;
     struct BSTNode* Right();
     const struct BSTNode* Right() const;
-
-    struct BSTNode* Find(struct BSTNode* root, const Data&) const;
-    struct BSTNode* FindParent(struct BSTNode* node, const Data&) const;
-
-    struct BSTNode* MinParent() const;
-    struct BSTNode* MaxParent() const;
-
-    struct BSTNode* PredecessorParent(const Data&) const;
-    struct BSTNode* SuccessorParent(const Data&) const;
 
   public:
 
@@ -66,10 +54,10 @@ public:
   BST() = default;
 
   // Copy constructor
-  BST(const Data&);
+  BST(const BST&);
 
   // Move constructor
-  BST(Data&&) noexcept;
+  BST(BST&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -105,19 +93,19 @@ public:
 
   void Remove(const Data&);
 
-  struct BSTNode& Min() const;
+  const Data& Min() const;
   Data MinNRemove();
   void RemoveMin();
 
-  struct BSTNode& Max() const;
+  const Data& Max() const;
   Data MaxNRemove();
   void RemoveMax();
 
-  struct BSTNode& Predecessor(const Data&) const;
+  const Data& Predecessor(const Data&) const;
   Data PredecessorNRemove(const Data&);
   void RemovePredecessor(const Data&);
 
-  struct BSTNode& Successor(const Data&) const;
+  const Data& Successor(const Data&) const;
   Data SuccessorNRemove(const Data&);
   void RemoveSuccessor(const Data&);
 
@@ -126,23 +114,43 @@ public:
   // Specific member functions (inherited from TestableContainer)
   bool Exists(const Data&) const noexcept override; // Override TestableContainer member
 
+  using BinaryTreeLnk<Data>::MapBreadth;
+  using BinaryTreeLnk<Data>::FoldBreadth;
+
+  using BinaryTreeLnk<Data>::MapInOrder;
+  using BinaryTreeLnk<Data>::MapPreOrder;
+  using BinaryTreeLnk<Data>::MapPostOrder;
+
+  using BinaryTreeLnk<Data>::FoldInOrder;
+  using BinaryTreeLnk<Data>::FoldPreOrder;
+  using BinaryTreeLnk<Data>::FoldPostOrder;
+
 protected:
 
-  void Remove(const struct BSTNode&);
-  // void RemoveMin();
-  // void RemoveMax();
-  void SkipOnLeft(const struct BSTNode*);
-  void SkipOnRight(const struct BSTNode*);
+  void Remove(struct BSTNode&);
+
+  void SkipOnLeft(struct BSTNode*);
+  void SkipOnRight(struct BSTNode*);
 
   /* ************************************************************************ */
 
-  QueueLst<Data>& enqueueTreeInOrder();
-    void mapEnqueueTree(Data&, void*);
+  QueueLst<Data>* enqueueTreeInOrder() const;
+    void InOrderEnqueueTree(QueueLst<Data>*, struct BSTNode*) const;
+
+  struct BSTNode* Min(struct BSTNode*) const;
+  struct BSTNode* Max(struct BSTNode*) const;
+
+  struct BSTNode* Predecessor(struct BSTNode*, const Data&) const;
+    struct BSTNode* Predecessor_IT(struct BSTNode*, const Data&, struct BSTNode*) const noexcept;
+  struct BSTNode* Successor(struct BSTNode*, const Data&) const;
+    struct BSTNode* Successor_IT(struct BSTNode*, const Data&, struct BSTNode*) const noexcept;
 
   struct BSTNode* InsertNode(struct BSTNode*, const Data&);
   struct BSTNode* InsertNode(struct BSTNode*, Data&&);
 
-  bool Search(struct BSTNode*, const Data&) const noexcept;
+  struct BSTNode* Search(struct BSTNode*, const Data&) const noexcept;
+  struct BSTNode* SearchParent(struct BSTNode*, const Data&) const noexcept;
+
 };
 
 }
