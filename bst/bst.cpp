@@ -204,62 +204,65 @@ const struct BST<Data>::BSTNode* BST<Data>::BSTNode::Right() const{
 
   template <typename Data>
   void BST<Data>::Remove(struct BSTNode& del){
-    if(del.IsLeaf()){
-      struct BSTNode* parent = SearchParent(&Root(), del.Element());
-
-      if(parent->HasLeftChild() && parent->left->Element() == del.Element())
-        BinaryTreeLnk<Data>::RemoveLeftChild(*parent);
-      else if(parent->HasRightChild() && parent->right->Element() == del.Element())
-        BinaryTreeLnk<Data>::RemoveRightChild(*parent);
-    }else if(del.HasLeftChild() ^ del.HasRightChild()){
-      struct BSTNode* parent = SearchParent(&Root(), del.Element());
-      struct BSTNode* child = nullptr;
-
-      if(parent->HasLeftChild() && parent->left->Element() == del.Element())
-        if(del.HasLeftChild())
-          SkipOnLeft(parent);
-        else
-          SkipOnRight(parent);
-      else if(parent->HasRightChild() && parent->right->Element() == del.Element())
-        if(del.HasLeftChild())
-          SkipOnLeft(parent);
-        else
-          SkipOnRight(parent);
-    }else if(del.HasLeftChild() && del.HasRightChild()){
+    if(del.HasLeftChild() && del.HasRightChild()){
       struct BSTNode* tmp = Successor(&Root(), del.Element());
       Data savedValue = tmp->Element();
 
       Remove(*tmp);
       del.Element() = savedValue;
+    }else{
+      struct BSTNode* parent = SearchParent(&Root(), del.Element());
 
-      size--;
+      if(del.IsLeaf()){
+        if(parent == nullptr)
+          BinaryTreeLnk<Data>::Clear();
+        else if(parent->HasLeftChild() && parent->left->Element() == del.Element())
+          BinaryTreeLnk<Data>::RemoveLeftChild(*parent);
+        else if(parent->HasRightChild() && parent->right->Element() == del.Element())
+          BinaryTreeLnk<Data>::RemoveRightChild(*parent);
+      }else if(del.HasLeftChild() ^ del.HasRightChild()){
+        if(parent == nullptr)
+          if(del.HasLeftChild()){
+            Data newValue = del.Left()->Element();
+            Remove(*del.Left());
+            del.Element() = newValue;
+          }else{
+            Data newValue = del.Right()->Element();
+            Remove(*del.Left());
+            del.Element() = newValue;
+          }
+        else if(parent->HasLeftChild() && parent->left->Element() == del.Element())
+          if(del.HasLeftChild())
+            parent->left = SkipOnLeft(parent->Left());
+          else
+            parent->left = SkipOnRight(parent->Left());
+        else if(parent->HasRightChild() && parent->right->Element() == del.Element())
+          if(del.HasLeftChild())
+            parent->right = SkipOnLeft(parent->Right());
+          else
+            parent->right = SkipOnRight(parent->Right());
+      }
     }
   }
 
   template <typename Data>
-  void BST<Data>::SkipOnLeft(struct BSTNode* node){
+  struct BST<Data>::BSTNode* BST<Data>::SkipOnLeft(struct BSTNode* node){
     struct BSTNode* Left = static_cast<struct BSTNode*>(node->left);
-    struct BSTNode* newLeft = static_cast<struct BSTNode*>(Left->left);
 
-    Left->left = nullptr;
-    delete Left;
-
-    node->left = newLeft;
-
+    delete node;
     size--;
+
+    return Left;
   }
 
   template <typename Data>
-  void BST<Data>::SkipOnRight(struct BSTNode* node){
+  struct BST<Data>::BSTNode* BST<Data>::SkipOnRight(struct BSTNode* node){
     struct BSTNode* Right = static_cast<struct BSTNode*>(node->right);
-    struct BSTNode* newRight = static_cast<struct BSTNode*>(Right->right);
 
-    Right->right = nullptr;
-    delete node->right;
-
-    node->right = newRight;
-
+    delete node;
     size--;
+
+    return Right;
   }
 
 /* ************************************************************************** */

@@ -114,6 +114,8 @@ public:
   // Specific member functions (inherited from TestableContainer)
   bool Exists(const Data&) const noexcept override; // Override TestableContainer member
 
+  using BinaryTreeLnk<Data>::Size;
+
   using BinaryTreeLnk<Data>::MapBreadth;
   using BinaryTreeLnk<Data>::FoldBreadth;
 
@@ -129,8 +131,8 @@ protected:
 
   void Remove(struct BSTNode&);
 
-  void SkipOnLeft(struct BSTNode*);
-  void SkipOnRight(struct BSTNode*);
+  struct BSTNode* SkipOnLeft(struct BSTNode*);
+  struct BSTNode* SkipOnRight(struct BSTNode*);
 
   /* ************************************************************************ */
 
