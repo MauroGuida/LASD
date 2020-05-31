@@ -221,26 +221,27 @@ const struct BST<Data>::BSTNode* BST<Data>::BSTNode::Right() const{
         else if(parent->HasRightChild() && parent->right->Element() == del.Element())
           BinaryTreeLnk<Data>::RemoveRightChild(*parent);
       }else if(del.HasLeftChild() ^ del.HasRightChild()){
-        if(parent == nullptr)
+        if(parent == nullptr){
           if(del.HasLeftChild()){
             Data newValue = del.Left()->Element();
             Remove(*del.Left());
             del.Element() = newValue;
           }else{
             Data newValue = del.Right()->Element();
-            Remove(*del.Left());
+            Remove(*del.Right());
             del.Element() = newValue;
           }
-        else if(parent->HasLeftChild() && parent->left->Element() == del.Element())
+        }else if(parent->HasLeftChild() && parent->left->Element() == del.Element()){
           if(del.HasLeftChild())
             parent->left = SkipOnLeft(parent->Left());
           else
             parent->left = SkipOnRight(parent->Left());
-        else if(parent->HasRightChild() && parent->right->Element() == del.Element())
+        }else if(parent->HasRightChild() && parent->right->Element() == del.Element()){
           if(del.HasLeftChild())
             parent->right = SkipOnLeft(parent->Right());
           else
             parent->right = SkipOnRight(parent->Right());
+        }
       }
     }
   }

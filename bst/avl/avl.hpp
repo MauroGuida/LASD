@@ -21,77 +21,121 @@ private:
 
 protected:
 
-  // using BST<Data>::???;
-
-  // ...
+  using BST<Data>::size;
+  using BST<Data>::root;
 
 public:
 
-  struct AVLNode { // Should extend BSTNode
+  struct AVLNode : public BST<Data>::BSTNode {
 
-    // ...
+  protected:
+
+    struct AVLNode* Left();
+    const struct AVLNode* Left() const;
+    struct AVLNode* Right();
+    const struct AVLNode* Right() const;
+
+    long heightST = 0;
+
+  public:
+
+    using BST<Data>::BSTNode::BSTNode;
+    friend class AVL<Data>;
 
   };
 
   /* ************************************************************************ */
 
   // Default constructor
-  // AVL() specifiers;
+  AVL() = default;
 
   // Copy constructor
-  // AVL(argument) specifiers;
+  AVL(const AVL<Data>&);
 
   // Move constructor
-  // AVL(argument) specifiers;
+  AVL(AVL<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~AVL() specifiers;
+  ~AVL() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  AVL<Data>& operator=(const AVL<Data>&);
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  AVL<Data>& operator=(AVL<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
-  // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  // Comparison operators // inherited from BST
+  // bool operator==(const AVL<Data>&) const noexcept;
+  // bool operator!=(const AVL<Data>&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BinaryTree)
-
-  // type Root() specifiers; // Override BinaryTree member (might throw std::length_error)
-  // type NewRoot(argument) specifiers; // Override BinaryTree member (Copy of the value)
-  // type NewRoot(argument) specifiers; // Override BinaryTree member (Move of the value)
+  struct AVLNode& Root() const override; // Override BinaryTree member (might throw std::length_error)
+  void NewRoot(const Data&) override; // Override BinaryTree member (Copy of the value)
+  void NewRoot(Data&&) override; // Override BinaryTree member (Move of the value)
 
   /* ************************************************************************ */
 
   // Specific member functions
+  void Insert(const Data&);
+  void Insert(Data&&);
 
-  // type Insert(argument) specifiers;
-  // type Insert(argument) specifiers;
-  // type Remove(argument) specifiers;
+  void Remove(const Data&);
 
-  // type MinNRemove() specifiers;
-  // type RemoveMin() specifiers;
+  Data MinNRemove();
+  void RemoveMin();
 
-  // type MaxNRemove() specifiers;
-  // type RemoveMax() specifiers;
+  Data MaxNRemove();
+  void RemoveMax();
 
-  // type PredecessorNRemove(argument) specifiers;
-  // type RemovePredecessor(argument) specifiers;
+  Data PredecessorNRemove(const Data&);
+  void RemovePredecessor(const Data&);
 
-  // type SuccessorNRemove(argument) specifiers;
-  // type RemoveSuccessor(argument) specifiers;
+  Data SuccessorNRemove(const Data&);
+  void RemoveSuccessor(const Data&);
 
   /* ************************************************************************ */
+
+protected:
+
+  struct AVLNode* Remove(struct AVLNode*, const Data&);
+
+  struct AVLNode* InsertNode(struct AVLNode*, const Data&);
+  struct AVLNode* InsertNode(struct AVLNode*, Data&&);
+
+  struct AVLNode* BalanceL(struct AVLNode*);
+  struct AVLNode* BalanceR(struct AVLNode*);
+
+  struct AVLNode* RotationSL(struct AVLNode*);
+  struct AVLNode* RotationSR(struct AVLNode*);
+
+  struct AVLNode* RotationDL(struct AVLNode*);
+  struct AVLNode* RotationDR(struct AVLNode*);
+
+  bool isSL(struct AVLNode*) const noexcept;
+  bool isSR(struct AVLNode*) const noexcept;
+
+  long getHeightST(struct AVLNode*) const noexcept;
+  long max(long, long);
+
+  void RecalculateHeight(struct AVLNode*) noexcept;
+
+
+// // TEST!
+//   public: void StampaAltezzaNodi(struct AVLNode* ptr){
+//     if(ptr!=nullptr){
+//       StampaAltezzaNodi(ptr->Left());
+//       std::cout<<getHeightST(ptr)<<" ";
+//       StampaAltezzaNodi(ptr->Right());
+//     }
+//   }
 
 };
 
