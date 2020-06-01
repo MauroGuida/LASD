@@ -3,25 +3,25 @@ namespace lasd {
 
 /* ************************************************************************** */
 
-template <typename Data>
-struct BST<Data>::BSTNode* BST<Data>::BSTNode::Left(){
-  return static_cast<struct BSTNode*>(BinaryTreeLnk<Data>::NodeLnk::left);
-}
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::BSTNode::Left(){
+    return static_cast<struct BSTNode*>(BinaryTreeLnk<Data>::NodeLnk::left);
+  }
 
-template <typename Data>
-const struct BST<Data>::BSTNode* BST<Data>::BSTNode::Left() const{
-  return static_cast<struct BSTNode*>(BinaryTreeLnk<Data>::NodeLnk::left);
-}
+  template <typename Data>
+  const struct BST<Data>::BSTNode* BST<Data>::BSTNode::Left() const{
+    return static_cast<struct BSTNode*>(BinaryTreeLnk<Data>::NodeLnk::left);
+  }
 
-template <typename Data>
-struct BST<Data>::BSTNode* BST<Data>::BSTNode::Right(){
-  return static_cast<struct BSTNode*>(BinaryTreeLnk<Data>::NodeLnk::right);
-}
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::BSTNode::Right(){
+    return static_cast<struct BSTNode*>(BinaryTreeLnk<Data>::NodeLnk::right);
+  }
 
-template <typename Data>
-const struct BST<Data>::BSTNode* BST<Data>::BSTNode::Right() const{
-  return static_cast<struct BSTNode*>(BinaryTreeLnk<Data>::NodeLnk::right);
-}
+  template <typename Data>
+  const struct BST<Data>::BSTNode* BST<Data>::BSTNode::Right() const{
+    return static_cast<struct BSTNode*>(BinaryTreeLnk<Data>::NodeLnk::right);
+  }
 
 /* ************************************************************************** */
 
