@@ -1,30 +1,30 @@
 
 namespace lasd {
 
-template <typename Data>
-struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Left(){
-  return static_cast<struct AVLNode*>(BST<Data>::BSTNode::left);
-}
+  template <typename Data>
+  struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Left(){
+    return static_cast<struct AVLNode*>(BST<Data>::BSTNode::left);
+  }
 
-template <typename Data>
-const struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Left() const{
-  return static_cast<struct AVLNode*>(BST<Data>::BSTNode::left);
-}
+  template <typename Data>
+  const struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Left() const{
+    return static_cast<struct AVLNode*>(BST<Data>::BSTNode::left);
+  }
 
-template <typename Data>
-struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Right(){
-  return static_cast<struct AVLNode*>(BST<Data>::BSTNode::right);
-}
+  template <typename Data>
+  struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Right(){
+    return static_cast<struct AVLNode*>(BST<Data>::BSTNode::right);
+  }
 
-template <typename Data>
-const struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Right() const{
-  return static_cast<struct AVLNode*>(BST<Data>::BSTNode::right);
-}
+  template <typename Data>
+  const struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Right() const{
+    return static_cast<struct AVLNode*>(BST<Data>::BSTNode::right);
+  }
 
 /* ************************************************************************** */
 
 // Copy constructor
-template <typename Data>
+  template <typename Data>
   AVL<Data>::AVL(const AVL<Data>& copyFrom){
     root = copySubtree(static_cast<struct AVLNode*>(copyFrom.root));
   }

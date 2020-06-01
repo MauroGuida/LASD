@@ -129,15 +129,6 @@ protected:
 
   struct AVLNode* copySubtree(struct AVLNode*);
 
-// // TEST!
-//   public: void StampaAltezzaNodi(struct AVLNode* ptr){
-//     if(ptr!=nullptr){
-//       StampaAltezzaNodi(ptr->Left());
-//       std::cout<<getHeightST(ptr)<<" ";
-//       StampaAltezzaNodi(ptr->Right());
-//     }
-//   }
-
 };
 
 }
