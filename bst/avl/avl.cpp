@@ -25,28 +25,30 @@ const struct AVL<Data>::AVLNode* AVL<Data>::AVLNode::Right() const{
 
 // Copy constructor
 template <typename Data>
-  AVL<Data>::AVL(const AVL<Data>& copyFrom) : BST<Data>::BST(copyFrom){
-    RecalculateHeight(static_cast<struct AVLNode*>(root));
+  AVL<Data>::AVL(const AVL<Data>& copyFrom){
+    root = copySubtree(static_cast<struct AVLNode*>(copyFrom.root));
   }
 
 // Move constructor
   template <typename Data>
-  AVL<Data>::AVL(AVL<Data>&& moveFrom) noexcept : BST<Data>::BST(moveFrom){
+  AVL<Data>::AVL(AVL<Data>&& moveFrom) noexcept : BinaryTreeLnk<Data>::BinaryTreeLnk(std::move(moveFrom)){
 
   }
 
 // Copy assignment
   template <typename Data>
   AVL<Data>& AVL<Data>::operator=(const AVL<Data>& copyFrom){
-    AVL<Data>& tmp = BST<Data>::operator=(copyFrom);
-    RecalculateHeight(static_cast<struct AVLNode*>(tmp.root));
-    return tmp;
+    BinaryTreeLnk<Data>::Clear();
+
+    root = copySubtree(static_cast<struct AVLNode*>(copyFrom.root));
+
+    return *this;
   }
 
 // Move assignment
   template <typename Data>
   AVL<Data>& AVL<Data>::operator=(AVL<Data>&& moveFrom) noexcept{
-    return BST<Data>::operator=(moveFrom);
+    return BinaryTreeLnk<Data>::operator=(std::move(moveFrom));
   }
 
 
@@ -146,6 +148,29 @@ template <typename Data>
 /* ************************************************************************** */
 
   template <typename Data>
+  struct AVL<Data>::AVLNode* AVL<Data>::DetachMin(struct AVL<Data>::AVLNode* node, struct AVL<Data>::AVLNode* parent){
+    struct AVLNode* ret = nullptr;
+    struct AVLNode* newNode = nullptr;
+
+    if(node != nullptr){
+      if(node->Left() != nullptr){
+        ret = DetachMin(node->Left(), node);
+        node = BalanceR(node);
+      }else{
+        ret = node;
+        newNode = node->Right();
+      }
+    }
+
+    if(node == parent->Left())
+      parent->left = newNode;
+    else
+      parent->right = newNode;
+
+    return ret;
+  }
+
+  template <typename Data>
   struct AVL<Data>::AVLNode* AVL<Data>::Remove(struct AVL<Data>::AVLNode* node, const Data& value){
     if(node != nullptr){
       if(node->Element() > value){
@@ -168,13 +193,17 @@ template <typename Data>
         BST<Data>::Remove(*node);
         return tmp;
       }else{
-        Data tmp = BST<Data>::Min(static_cast<struct BST<Data>::BSTNode*>(node->right))->Element();
+        struct AVLNode* tmp = DetachMin(node->Right(), node);
+        std::swap(node->Element(), tmp->Element());
+        node = BalanceL(node);
+        delete tmp;
 
-        struct AVLNode* oldNode = node;
-        node = Remove(node, tmp);
-
-        std::swap(oldNode->Element(), tmp);
-        // // node = BalanceL(node);
+        // Data tmp = BST<Data>::Min(static_cast<struct BST<Data>::BSTNode*>(node->right))->Element();
+        //
+        // struct AVLNode* oldNode = node;
+        // node = Remove(node, tmp);
+        //
+        // std::swap(oldNode->Element(), tmp);
       }
     }
 
@@ -191,10 +220,10 @@ template <typename Data>
         node->left = InsertNode(node->Left(), value);
         node = BalanceL(node);
       }
-    }else
+    }else{
       node = new struct AVLNode(value);
-
-    size++;
+      size++;
+    }
 
     return node;
   }
@@ -209,10 +238,10 @@ template <typename Data>
         node->left = InsertNode(node->Left(), std::move(value));
         node = BalanceL(node);
       }
-    }else
+    }else{
       node = new struct AVLNode(std::move(value));
-
-    size++;
+      size++;
+    }
 
     return node;
   }
@@ -325,14 +354,19 @@ template <typename Data>
   }
 
   template <typename Data>
-  void AVL<Data>::RecalculateHeight(struct AVL<Data>::AVLNode* node) noexcept{
-    if(node == nullptr)
-      return;
+  struct AVL<Data>::AVLNode* AVL<Data>::copySubtree(struct AVL<Data>::AVLNode* copyTree){
+    if(copyTree == nullptr)
+      return nullptr;
 
-    // Post Order
-    RecalculateHeight(node->Left());
-    RecalculateHeight(node->Right());
-    node->heightST = 1 + max(getHeightST(node->Left()), getHeightST(node->Right()));
+    struct AVLNode* tmp = new struct AVLNode(copyTree->Element());
+    tmp->heightST = copyTree->heightST;
+
+    tmp->left = copySubtree(copyTree->Left());
+    tmp->right = copySubtree(copyTree->Right());
+
+    size++;
+
+    return tmp;
   }
 
 }

@@ -105,6 +105,8 @@ public:
 
 protected:
 
+  struct AVLNode* DetachMin(struct AVLNode*, struct AVLNode*);
+
   struct AVLNode* Remove(struct AVLNode*, const Data&);
 
   struct AVLNode* InsertNode(struct AVLNode*, const Data&);
@@ -125,8 +127,7 @@ protected:
   long getHeightST(struct AVLNode*) const noexcept;
   long max(long, long);
 
-  void RecalculateHeight(struct AVLNode*) noexcept;
-
+  struct AVLNode* copySubtree(struct AVLNode*);
 
 // // TEST!
 //   public: void StampaAltezzaNodi(struct AVLNode* ptr){
