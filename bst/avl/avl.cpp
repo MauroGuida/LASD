@@ -198,6 +198,8 @@ namespace lasd {
         node = BalanceL(node);
         delete tmp;
 
+        size--;
+
         // Data tmp = BST<Data>::Min(static_cast<struct BST<Data>::BSTNode*>(node->right))->Element();
         //
         // struct AVLNode* oldNode = node;
