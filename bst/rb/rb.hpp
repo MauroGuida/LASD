@@ -21,77 +21,145 @@ private:
 
 protected:
 
-  // using BST<Data>::???;
-
-  // ...
+  using BST<Data>::size;
+  using BST<Data>::root;
+  enum Color {black, red, dblack};
 
 public:
 
-  struct RBNode { // Should extend BSTNode
+  struct RBNode : public BST<Data>::BSTNode { // Should extend BSTNode
 
-    // ...
+  protected:
+
+    Color color = red;
+    // ulong blackHeight = 0;
+
+    struct RBNode* Left();
+    const struct RBNode* Left() const;
+    struct RBNode* Right();
+    const struct RBNode* Right() const;
+
+  public:
+
+    using BST<Data>::BSTNode::BSTNode;
+    friend class RB<Data>;
 
   };
 
   /* ************************************************************************ */
 
   // Default constructor
-  // RB() specifiers;
+  RB() = default;
 
   // Copy constructor
-  // RB(argument) specifiers;
+  RB(const RB&);
 
   // Move constructor
-  // RB(argument) specifiers;
+  RB(RB&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~RB() specifiers;
+  ~RB() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  RB& operator=(const RB<Data>&);
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  RB& operator=(RB<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  // bool operator==(const RB<Data>&) const noexcept;
+  // bool operator!=(const RB<Data>&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BinaryTree)
-
-  // type Root() specifiers; // Override BinaryTree member (might throw std::length_error)
-  // type NewRoot(argument) specifiers; // Override BinaryTree member (Copy of the value)
-  // type NewRoot(argument) specifiers; // Override BinaryTree member (Move of the value)
+  struct RBNode& Root() const override; // Override BinaryTree member (might throw std::length_error)
+  void NewRoot(const Data&) override; // Override BinaryTree member (Copy of the value)
+  void NewRoot(Data&&) override; // Override BinaryTree member (Move of the value)
 
   /* ************************************************************************ */
 
   // Specific member functions
+  void Insert(const Data&);
+  void Insert(Data&&);
 
-  // type Insert(argument) specifiers;
-  // type Insert(argument) specifiers;
-  // type Remove(argument) specifiers;
+  void Remove(const Data&);
 
-  // type MinNRemove() specifiers;
-  // type RemoveMin() specifiers;
+  Data MinNRemove();
+  void RemoveMin();
 
-  // type MaxNRemove() specifiers;
-  // type RemoveMax() specifiers;
+  Data MaxNRemove();
+  void RemoveMax();
 
-  // type PredecessorNRemove(argument) specifiers;
-  // type RemovePredecessor(argument) specifiers;
+  Data PredecessorNRemove(const Data&);
+  void RemovePredecessor(const Data&);
 
-  // type SuccessorNRemove(argument) specifiers;
-  // type RemoveSuccessor(argument) specifiers;
+  Data SuccessorNRemove(const Data&);
+  void RemoveSuccessor(const Data&);
 
   /* ************************************************************************ */
+
+  void stampaInOrder(struct RBNode* node){
+    if(node == nullptr)
+      return;
+
+    stampaInOrder(node->Left());
+    std::cout << "Value: " << node->Element() << " Color: " << node->color << std::endl;
+    stampaInOrder(node->Right());
+  }
+
+protected:
+
+  // Insert
+  struct RBNode* InsertNode(struct RBNode*, const Data&);
+  struct RBNode* InsertNode(struct RBNode*, Data&&);
+
+  int ViolationTypeL(struct RBNode*, struct RBNode*);
+  int ViolationTypeR(struct RBNode*, struct RBNode*);
+
+  struct RBNode* BalanceL(struct RBNode*);
+    struct RBNode* BalanceL_1(struct RBNode*);
+    struct RBNode* BalanceL_2(struct RBNode*);
+    struct RBNode* BalanceL_3(struct RBNode*);
+  struct RBNode* BalanceR(struct RBNode*);
+    struct RBNode* BalanceR_1(struct RBNode*);
+    struct RBNode* BalanceR_2(struct RBNode*);
+    struct RBNode* BalanceR_3(struct RBNode*);
+
+  struct RBNode* RotationL(struct RBNode*);
+  struct RBNode* RotationR(struct RBNode*);
+
+  // Remove
+  struct RBNode* Remove(struct RBNode*, const Data&);
+
+  int removeViolationTypeL(struct RBNode*, struct RBNode*);
+  int removeViolationTypeR(struct RBNode*, struct RBNode*);
+
+  struct RBNode* removeBalanceL(struct RBNode*);
+    struct RBNode* removeBalanceL_1(struct RBNode*);
+    struct RBNode* removeBalanceL_2(struct RBNode*);
+    struct RBNode* removeBalanceL_3(struct RBNode*);
+    struct RBNode* removeBalanceL_4(struct RBNode*);
+  struct RBNode* removeBalanceR(struct RBNode*);
+    struct RBNode* removeBalanceR_1(struct RBNode*);
+    struct RBNode* removeBalanceR_2(struct RBNode*);
+    struct RBNode* removeBalanceR_3(struct RBNode*);
+    struct RBNode* removeBalanceR_4(struct RBNode*);
+
+  struct RBNode* removeRoot(struct RBNode*);
+
+  struct RBNode* DetachMin(struct RBNode*, struct RBNode*);
+
+  void propagateBlack(struct RBNode*);
+
+  // Accessory
+  struct RBNode* copySubtree(struct RBNode*);
 
 };
 
