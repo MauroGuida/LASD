@@ -58,7 +58,7 @@ namespace lasd {
 
   template <typename Data>
   struct RB<Data>::RBNode& RB<Data>::Root() const{
-    if(root == nullptr)
+    if(!root)
       throw std::length_error("Root does not Exists!");
 
     return *static_cast<struct RBNode*>(root);
@@ -99,6 +99,8 @@ namespace lasd {
   template <typename Data>
   void RB<Data>::Remove(const Data& value){
     root = Remove(static_cast<struct RBNode*>(root), value);
+    if(root)
+      Root().color = black;
   }
 
 
@@ -163,7 +165,7 @@ namespace lasd {
   // Insert
   template <typename Data>
   struct RB<Data>::RBNode* RB<Data>::InsertNode(struct RB<Data>::RBNode* node, const Data& copyValue){
-    if(node != nullptr){
+    if(node){
       if(copyValue < node->Element()){
         node->left = InsertNode(node->Left(), copyValue);
         node = BalanceL(node);
@@ -181,7 +183,7 @@ namespace lasd {
 
   template <typename Data>
   struct RB<Data>::RBNode* RB<Data>::InsertNode(struct RB<Data>::RBNode* node, Data&& moveValue){
-    if(node != nullptr){
+    if(node){
       if(moveValue < node->Element()){
         node->left = InsertNode(node->Left(), std::move(moveValue));
         node = BalanceL(node);
@@ -201,11 +203,11 @@ namespace lasd {
   template <typename Data>
   int RB<Data>::ViolationTypeL(struct RB<Data>::RBNode* nodeL, struct RB<Data>::RBNode* nodeR){
     int violation = 0;
-    if((nodeL != nullptr && nodeL->color == red) && (nodeR != nullptr && nodeR->color == red)){
+    if((nodeL && nodeL->color == red) && (nodeR && nodeR->color == red)){
       if((nodeL->HasLeftChild() && nodeL->Left()->color == red) || (nodeL->HasRightChild() && nodeL->Right()->color == red))
         violation = 1;
     }else
-      if(nodeL != nullptr && nodeL->color == red){
+      if(nodeL && nodeL->color == red){
         if(nodeL->HasRightChild() && nodeL->Right()->color == red)
           violation = 2;
         else if(nodeL->HasLeftChild() && nodeL->Left()->color == red)
@@ -218,11 +220,11 @@ namespace lasd {
   template <typename Data>
   int RB<Data>::ViolationTypeR(struct RB<Data>::RBNode* nodeL, struct RB<Data>::RBNode* nodeR){
     int violation = 0;
-    if((nodeL != nullptr && nodeL->color == red) && (nodeR != nullptr && nodeR->color == red)){
+    if((nodeL && nodeL->color == red) && (nodeR && nodeR->color == red)){
       if((nodeR->HasRightChild() && nodeR->Right()->color == red) || (nodeR->HasLeftChild() && nodeR->Left()->color == red))
         violation = 1;
     }else
-      if(nodeR != nullptr && nodeR->color == red){
+      if(nodeR && nodeR->color == red){
         if(nodeR->HasLeftChild() && nodeR->Left()->color == red)
           violation = 2;
         else if(nodeR->HasRightChild() && nodeR->Right()->color == red)
@@ -346,7 +348,7 @@ namespace lasd {
   // Remove
   template <typename Data>
   struct RB<Data>::RBNode* RB<Data>::Remove(struct RB<Data>::RBNode* node, const Data& value){
-    if(node != nullptr){
+    if(node){
       if(node->Element() < value){
         node->right = Remove(node->Right(), value);
         node = removeBalanceR(node);
@@ -366,12 +368,12 @@ namespace lasd {
   template <typename Data>
   int RB<Data>::removeViolationTypeL(struct RB<Data>::RBNode* nodeL, struct RB<Data>::RBNode* nodeR){
     int violation = 0;
-    if(nodeL != nullptr && nodeL->color == dblack){
-      if(nodeR != nullptr && nodeR->color == red)
+    if(nodeL && nodeL->color == dblack){
+      if(nodeR && nodeR->color == red)
         violation = 1;
-      else if(nodeR != nullptr && (nodeR->HasRightChild() && nodeR->Right()->color == black) && (nodeR->HasLeftChild() && nodeR->Left()->color == black))
+      else if(nodeR && (nodeR->HasRightChild() && nodeR->Right()->color == black) && (nodeR->HasLeftChild() && nodeR->Left()->color == black))
         violation = 2;
-      else if(nodeR != nullptr && nodeR->HasRightChild() && nodeR->Right()->color == black)
+      else if(nodeR && nodeR->HasRightChild() && nodeR->Right()->color == black)
         violation = 3;
       else
         violation = 4;
@@ -383,12 +385,12 @@ namespace lasd {
   template <typename Data>
   int RB<Data>::removeViolationTypeR(struct RB<Data>::RBNode* nodeL, struct RB<Data>::RBNode* nodeR){
     int violation = 0;
-    if(nodeR != nullptr && nodeR->color == dblack){
-      if(nodeL != nullptr && nodeL->color == red)
+    if(nodeR && nodeR->color == dblack){
+      if(nodeL && nodeL->color == red)
         violation = 1;
-      else if(nodeL != nullptr && (nodeL->HasRightChild() && nodeL->Right()->color == black) && (nodeL->HasLeftChild() && nodeL->Left()->color == black))
+      else if(nodeL && (nodeL->HasRightChild() && nodeL->Right()->color == black) && (nodeL->HasLeftChild() && nodeL->Left()->color == black))
         violation = 2;
-      else if(nodeL != nullptr && nodeL->HasRightChild() && nodeL->Right()->color == black)
+      else if(nodeL && nodeL->HasRightChild() && nodeL->Right()->color == black)
         violation = 3;
       else
         violation = 4;
@@ -530,11 +532,12 @@ namespace lasd {
     struct RB<Data>::RBNode* RB<Data>::removeRoot(struct RB<Data>::RBNode* node){
       struct RBNode* tmp;
 
-      if(node->Left() == nullptr || node->Right() == nullptr){
+      if(!node->Left() || !node->Right()){
         tmp = node;
-        if(node->Left() == nullptr)
+
+        if(!node->Left())
           node = node->Right();
-        else if(node->Right() == nullptr)
+        else if(!node->Right())
           node = node->Left();
 
         if(tmp->color == black)
@@ -555,8 +558,8 @@ namespace lasd {
     struct RB<Data>::RBNode* RB<Data>::DetachMin(struct RB<Data>::RBNode* node, struct RB<Data>::RBNode* parent){
       struct RBNode* tmp;
 
-      if(node != nullptr){
-        if(node->Left() != nullptr){
+      if(node){
+        if(node->Left()){
           tmp = DetachMin(node->Left(), node);
           if(node == parent->Left())
             parent->left = removeBalanceL(node);
@@ -582,6 +585,9 @@ namespace lasd {
 
     template <typename Data>
     void RB<Data>::propagateBlack(struct RB<Data>::RBNode* node){
+      if(!node)
+        return;
+
       if(node->color == red)
         node->color = black;
       else
@@ -592,12 +598,11 @@ namespace lasd {
   // Accessory
   template <typename Data>
   struct RB<Data>::RBNode* RB<Data>::copySubtree(struct RB<Data>::RBNode* copyTree){
-    if(copyTree == nullptr)
+    if(!copyTree)
       return nullptr;
 
     struct RBNode* tmp = new struct RBNode(copyTree->Element());
     tmp->color = copyTree->color;
-    // tmp->blackHeight = copyTree->blackHeight;
 
     tmp->left = copySubtree(copyTree->Left());
     tmp->right = copySubtree(copyTree->Right());

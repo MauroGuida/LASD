@@ -32,7 +32,6 @@ public:
   protected:
 
     Color color = red;
-    // ulong blackHeight = 0;
 
     struct RBNode* Left();
     const struct RBNode* Left() const;
