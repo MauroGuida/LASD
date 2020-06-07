@@ -88,26 +88,26 @@ public:
   /* ************************************************************************ */
 
   // Specific member functions
-  void Insert(const Data&);
-  void Insert(Data&&);
+  virtual void Insert(const Data&);
+  virtual void Insert(Data&&);
 
-  void Remove(const Data&);
+  virtual void Remove(const Data&);
 
   const Data& Min() const;
-  Data MinNRemove();
-  void RemoveMin();
+  virtual Data MinNRemove();
+  virtual void RemoveMin();
 
   const Data& Max() const;
-  Data MaxNRemove();
-  void RemoveMax();
+  virtual Data MaxNRemove();
+  virtual void RemoveMax();
 
   const Data& Predecessor(const Data&) const;
-  Data PredecessorNRemove(const Data&);
-  void RemovePredecessor(const Data&);
+  virtual Data PredecessorNRemove(const Data&);
+  virtual void RemovePredecessor(const Data&);
 
   const Data& Successor(const Data&) const;
-  Data SuccessorNRemove(const Data&);
-  void RemoveSuccessor(const Data&);
+  virtual Data SuccessorNRemove(const Data&);
+  virtual void RemoveSuccessor(const Data&);
 
   /* ************************************************************************ */
 
@@ -127,31 +127,36 @@ public:
   using BinaryTreeLnk<Data>::FoldPreOrder;
   using BinaryTreeLnk<Data>::FoldPostOrder;
 
+  /* ************************************************************************ */
+
 protected:
 
-  void Remove(struct BSTNode&);
+  void Remove(struct BSTNode*);
 
   struct BSTNode* SkipOnLeft(struct BSTNode*);
   struct BSTNode* SkipOnRight(struct BSTNode*);
 
-  /* ************************************************************************ */
-
-  QueueLst<Data>* enqueueTreeInOrder() const;
-    void InOrderEnqueueTree(QueueLst<Data>*, struct BSTNode*) const;
+  struct BSTNode* Search(struct BSTNode*, const Data&) const noexcept;
+  struct BSTNode* SearchParent(struct BSTNode*, const Data&) const noexcept;
 
   struct BSTNode* Min(struct BSTNode*) const;
   struct BSTNode* Max(struct BSTNode*) const;
 
   struct BSTNode* Predecessor(struct BSTNode*, const Data&) const;
-    struct BSTNode* Predecessor_IT(struct BSTNode*, const Data&, struct BSTNode*) const noexcept;
   struct BSTNode* Successor(struct BSTNode*, const Data&) const;
-    struct BSTNode* Successor_IT(struct BSTNode*, const Data&, struct BSTNode*) const noexcept;
+
+  /* ************************************************************************ */
+
+private:
+
+  QueueVec<Data>* enqueueTreeInOrder() const;
+    void InOrderEnqueueTree(QueueVec<Data>*, struct BSTNode*) const;
+
+  struct BSTNode* Predecessor_IT(struct BSTNode*, const Data&, struct BSTNode*) const noexcept;
+  struct BSTNode* Successor_IT(struct BSTNode*, const Data&, struct BSTNode*) const noexcept;
 
   struct BSTNode* InsertNode(struct BSTNode*, const Data&);
   struct BSTNode* InsertNode(struct BSTNode*, Data&&);
-
-  struct BSTNode* Search(struct BSTNode*, const Data&) const noexcept;
-  struct BSTNode* SearchParent(struct BSTNode*, const Data&) const noexcept;
 
 };
 

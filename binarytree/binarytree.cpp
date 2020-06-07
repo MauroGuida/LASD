@@ -61,6 +61,22 @@ using namespace lasd;
       return flag;
     }
 
+    // template <typename Data>
+    // bool BinaryTree<Data>::equals(const struct BinaryTree<Data>::Node* T1, const struct BinaryTree<Data>::Node* T2) const{
+    //   if (!T1 && !T2)
+    //       return true;
+    //   else if (T1 && !T2)
+    //       return false;
+    //   else if (!T1 && T2)
+    //       return false;
+    //   else {
+    //     if (T1->Element() == T2->Element() && equals(&T1->LeftChild(), &T2->LeftChild()) && equals(&T1->RightChild(), &T2->RightChild()))
+    //         return true;
+    //     else
+    //         return false;
+    //   }
+    // }
+
   template <typename Data>
   bool BinaryTree<Data>::operator!=(const BinaryTree<Data>& comp) const noexcept{
     return !(*this == comp);

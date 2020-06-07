@@ -84,26 +84,26 @@ public:
   /* ************************************************************************ */
 
   // Specific member functions
-  void Insert(const Data&);
-  void Insert(Data&&);
+  void Insert(const Data&) override;
+  void Insert(Data&&) override;
 
-  void Remove(const Data&);
+  void Remove(const Data&) override;
 
-  Data MinNRemove();
-  void RemoveMin();
+  Data MinNRemove() override;
+  void RemoveMin() override;
 
-  Data MaxNRemove();
-  void RemoveMax();
+  Data MaxNRemove() override;
+  void RemoveMax() override;
 
-  Data PredecessorNRemove(const Data&);
-  void RemovePredecessor(const Data&);
+  Data PredecessorNRemove(const Data&) override;
+  void RemovePredecessor(const Data&) override;
 
-  Data SuccessorNRemove(const Data&);
-  void RemoveSuccessor(const Data&);
+  Data SuccessorNRemove(const Data&) override;
+  void RemoveSuccessor(const Data&) override;
 
   /* ************************************************************************ */
 
-protected:
+private:
 
   struct AVLNode* DetachMin(struct AVLNode*, struct AVLNode*);
 

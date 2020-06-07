@@ -85,25 +85,26 @@ public:
   /* ************************************************************************ */
 
   // Specific member functions
-  void Insert(const Data&);
-  void Insert(Data&&);
+  void Insert(const Data&) override;
+  void Insert(Data&&) override;
 
-  void Remove(const Data&);
+  void Remove(const Data&) override;
 
-  Data MinNRemove();
-  void RemoveMin();
+  Data MinNRemove() override;
+  void RemoveMin() override;
 
-  Data MaxNRemove();
-  void RemoveMax();
+  Data MaxNRemove() override;
+  void RemoveMax() override;
 
-  Data PredecessorNRemove(const Data&);
-  void RemovePredecessor(const Data&);
+  Data PredecessorNRemove(const Data&) override;
+  void RemovePredecessor(const Data&) override;
 
-  Data SuccessorNRemove(const Data&);
-  void RemoveSuccessor(const Data&);
+  Data SuccessorNRemove(const Data&) override;
+  void RemoveSuccessor(const Data&) override;
 
   /* ************************************************************************ */
 
+  // DA RIMUOVERE!
   void stampaInOrder(struct RBNode* node){
     if(node == nullptr)
       return;
@@ -113,7 +114,22 @@ public:
     stampaInOrder(node->Right());
   }
 
-protected:
+  void printRB(){
+        printRB("", static_cast<struct RBNode*>(root),false);
+    }
+
+  void printRB(const std::string& prefix,struct RBNode* root, bool isLeft){
+    if(root != nullptr){
+      std::cout << prefix;
+      std::cout << (isLeft ? "├──" : "└──" );
+      std::cout << root->Element() << (root->color == Color::black ? "(B)" : "(R)") << std::endl;
+
+      printRB( prefix + (isLeft ? "│   " : "    "), root->Left(), true);
+      printRB( prefix + (isLeft ? "│   " : "    "), root->Right(), false);
+    }
+  }
+
+private:
 
   // Insert
   struct RBNode* InsertNode(struct RBNode*, const Data&);
@@ -145,11 +161,13 @@ protected:
     struct RBNode* removeBalanceL_2(struct RBNode*);
     struct RBNode* removeBalanceL_3(struct RBNode*);
     struct RBNode* removeBalanceL_4(struct RBNode*);
+    struct RBNode* removeBalanceL_5(struct RBNode*);
   struct RBNode* removeBalanceR(struct RBNode*);
     struct RBNode* removeBalanceR_1(struct RBNode*);
     struct RBNode* removeBalanceR_2(struct RBNode*);
     struct RBNode* removeBalanceR_3(struct RBNode*);
     struct RBNode* removeBalanceR_4(struct RBNode*);
+    struct RBNode* removeBalanceR_5(struct RBNode*);
 
   struct RBNode* removeRoot(struct RBNode*);
 

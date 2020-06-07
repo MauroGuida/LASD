@@ -31,6 +31,7 @@ namespace lasd {
   template <typename Data>
   RB<Data>::RB(const RB& copyFrom) : BinaryTreeLnk<Data>::BinaryTreeLnk(copyFrom){
     root = copySubtree(static_cast<struct RBNode*>(copyFrom.root));
+    size = copyFrom.Size();
   }
 
   // Move constructor
@@ -45,6 +46,7 @@ namespace lasd {
     BinaryTreeLnk<Data>::Clear();
 
     root = copySubtree(static_cast<struct RBNode*>(copyFrom.root));
+    size = copyFrom.Size();
 
     return *this;
   }
@@ -98,7 +100,7 @@ namespace lasd {
 
   template <typename Data>
   void RB<Data>::Remove(const Data& value){
-    root = Remove(static_cast<struct RBNode*>(root), value);
+    root = Remove(&Root(), value);
     if(root)
       Root().color = black;
   }
@@ -327,21 +329,21 @@ namespace lasd {
 
 
   template <typename Data>
-  struct RB<Data>::RBNode* RB<Data>::RotationR(struct RB<Data>::RBNode* node){
-    struct RBNode* rightChild = node->Right();
-    node->right = rightChild->Left();
-    rightChild->left = node;
-
-    return rightChild;
-  }
-
-  template <typename Data>
   struct RB<Data>::RBNode* RB<Data>::RotationL(struct RB<Data>::RBNode* node){
     struct RBNode* leftChild = node->Left();
     node->left = leftChild->Right();
     leftChild->right = node;
 
     return leftChild;
+  }
+
+  template <typename Data>
+  struct RB<Data>::RBNode* RB<Data>::RotationR(struct RB<Data>::RBNode* node){
+    struct RBNode* rightChild = node->Right();
+    node->right = rightChild->Left();
+    rightChild->left = node;
+
+    return rightChild;
   }
 
 
@@ -373,12 +375,15 @@ namespace lasd {
         violation = 1;
       else if(nodeR && (nodeR->HasRightChild() && nodeR->Right()->color == black) && (nodeR->HasLeftChild() && nodeR->Left()->color == black))
         violation = 2;
-      else if(nodeR && nodeR->HasRightChild() && nodeR->Right()->color == black)
+      else if(nodeR && (nodeR->HasLeftChild() && nodeR->Left()->color == red))
         violation = 3;
-      else
+      else if(nodeR && (nodeR->HasRightChild() && nodeR->Right()->color == red))
         violation = 4;
+      else
+        violation = 5;
     }
 
+    std::cout << "Violazione L: " << violation << std::endl;
     return violation;
   }
 
@@ -390,12 +395,15 @@ namespace lasd {
         violation = 1;
       else if(nodeL && (nodeL->HasRightChild() && nodeL->Right()->color == black) && (nodeL->HasLeftChild() && nodeL->Left()->color == black))
         violation = 2;
-      else if(nodeL && nodeL->HasRightChild() && nodeL->Right()->color == black)
+      else if(nodeL && (nodeL->HasRightChild() && nodeL->Right()->color == red))
         violation = 3;
-      else
+      else if(nodeL && (nodeL->HasLeftChild() && nodeL->Left()->color == red))
         violation = 4;
+      else
+        violation = 5;
     }
 
+    std::cout << "Violazione R: " << violation << std::endl;
     return violation;
   }
 
@@ -417,6 +425,8 @@ namespace lasd {
           break;
         }case 4:{
           node = removeBalanceL_4(node);
+        }case 5:{
+          node = removeBalanceL_5(node);
         }
       }
     }
@@ -454,7 +464,7 @@ namespace lasd {
 
     template <typename Data>
     struct RB<Data>::RBNode* RB<Data>::removeBalanceL_4(struct RB<Data>::RBNode* node){
-      node = RotationL(node);
+      node = RotationR(node);
       node->Right()->color = node->color;
       node->color = node->Left()->color;
       node->Left()->color = black;
@@ -463,8 +473,22 @@ namespace lasd {
       return node;
     }
 
-
     template <typename Data>
+    struct RB<Data>::RBNode* RB<Data>::removeBalanceL_5(struct RB<Data>::RBNode* node){
+      if(node->Right()->IsLeaf()){
+        node->Left()->color = black;
+        propagateBlack(node);
+      }else{
+        node->Left()->color = black;
+        node->Right()->color = red;
+        propagateBlack(node);
+      }
+
+      return node;
+    }
+
+
+  template <typename Data>
   struct RB<Data>::RBNode* RB<Data>::removeBalanceR(struct RB<Data>::RBNode* node){
     if(node->HasLeftChild() || node->HasRightChild()){
       int violation = removeViolationTypeR(node->Left(), node->Right());
@@ -481,6 +505,8 @@ namespace lasd {
           break;
         }case 4:{
           node = removeBalanceR_4(node);
+        }case 5:{
+          node = removeBalanceR_5(node);
         }
       }
     }
@@ -488,7 +514,7 @@ namespace lasd {
     return node;
   }
 
-  template <typename Data>
+    template <typename Data>
     struct RB<Data>::RBNode* RB<Data>::removeBalanceR_1(struct RB<Data>::RBNode* node){
       node = RotationL(node);
       node->color = black;
@@ -518,11 +544,25 @@ namespace lasd {
 
     template <typename Data>
     struct RB<Data>::RBNode* RB<Data>::removeBalanceR_4(struct RB<Data>::RBNode* node){
-      node = RotationR(node);
+      node = RotationL(node);
       node->Left()->color = node->color;
       node->color = node->Right()->color;
       node->Right()->color = black;
       node->Right()->Right()->color = black;
+
+      return node;
+    }
+
+    template <typename Data>
+    struct RB<Data>::RBNode* RB<Data>::removeBalanceR_5(struct RB<Data>::RBNode* node){
+      if(node->Left()->IsLeaf()){
+        node->Right()->color = black;
+        propagateBlack(node);
+      }else{
+        node->Right()->color = black;
+        node->Left()->color = red;
+        propagateBlack(node);
+      }
 
       return node;
     }
@@ -532,7 +572,17 @@ namespace lasd {
     struct RB<Data>::RBNode* RB<Data>::removeRoot(struct RB<Data>::RBNode* node){
       struct RBNode* tmp;
 
-      if(!node->Left() || !node->Right()){
+      if(node->IsLeaf() && node->color == black){
+        struct RBNode* ancestor = static_cast<struct RBNode*>(BST<Data>::SearchParent(&Root(), node->Element()));
+        tmp = node;
+
+        if(ancestor && (ancestor->HasLeftChild() ^ ancestor->HasRightChild())/* &&
+            (ancestor->Left() == node || ancestor->Right() == node)*/)
+          propagateBlack(ancestor);
+
+        node = nullptr;
+        delete tmp;
+      }else if(!node->Left() || !node->Right()){
         tmp = node;
 
         if(!node->Left())
@@ -542,6 +592,8 @@ namespace lasd {
 
         if(tmp->color == black)
           propagateBlack(node);
+
+        delete tmp;
       }else{
         tmp = DetachMin(node->Right(), node);
         node->Element() = tmp->Element();
@@ -559,7 +611,7 @@ namespace lasd {
       struct RBNode* tmp;
 
       if(node){
-        if(node->Left()){
+        if(node->HasLeftChild()){
           tmp = DetachMin(node->Left(), node);
           if(node == parent->Left())
             parent->left = removeBalanceL(node);
@@ -588,6 +640,8 @@ namespace lasd {
       if(!node)
         return;
 
+      std::cout << "Doppio nero: " << node->Element() << std::endl;
+
       if(node->color == red)
         node->color = black;
       else
@@ -606,8 +660,6 @@ namespace lasd {
 
     tmp->left = copySubtree(copyTree->Left());
     tmp->right = copySubtree(copyTree->Right());
-
-    size++;
 
     return tmp;
   }

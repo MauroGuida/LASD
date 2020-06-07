@@ -190,7 +190,7 @@ namespace lasd {
           node->right = nullptr;
         }
 
-        BST<Data>::Remove(*node);
+        BST<Data>::Remove(node);
         return tmp;
       }else{
         struct AVLNode* tmp = DetachMin(node->Right(), node);

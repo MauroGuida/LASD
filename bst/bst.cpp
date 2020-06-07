@@ -54,8 +54,8 @@ namespace lasd {
   bool BST<Data>::operator==(const BST<Data>& comp) const noexcept{
     bool res = false;
     if(comp.size == size){
-      QueueLst<Data>* q1 = enqueueTreeInOrder();
-      QueueLst<Data>* q2 = comp.enqueueTreeInOrder();
+      QueueVec<Data>* q1 = enqueueTreeInOrder();
+      QueueVec<Data>* q2 = comp.enqueueTreeInOrder();
 
       res = *q1==*q2;
       delete q1;
@@ -112,7 +112,7 @@ namespace lasd {
     struct BSTNode* del = Search(&Root(), value);
 
     if(del != nullptr)
-      Remove(*del);
+      Remove(del);
   }
 
 
@@ -125,14 +125,14 @@ namespace lasd {
   Data BST<Data>::MinNRemove(){
     BSTNode* min = Min(&Root());
     Data ret = min->Element();
-    Remove(*min);
+    Remove(min);
 
     return ret;
   }
 
   template <typename Data>
   void BST<Data>::RemoveMin(){
-    Remove(*Min(&Root()));
+    Remove(Min(&Root()));
   }
 
 
@@ -145,14 +145,14 @@ namespace lasd {
   Data BST<Data>::MaxNRemove(){
     BSTNode* max = Max(&Root());
     Data ret = max->Element();
-    Remove(*max);
+    Remove(max);
 
     return ret;
   }
 
   template <typename Data>
   void BST<Data>::RemoveMax(){
-    Remove(*Max(&Root()));
+    Remove(Max(&Root()));
   }
 
 
@@ -165,7 +165,7 @@ namespace lasd {
   Data BST<Data>::PredecessorNRemove(const Data& value){
     struct BSTNode* pred = Predecessor(&Root(), value);
     Data retValue = pred->Element();
-    Remove(*pred);
+    Remove(pred);
 
     return retValue;
   }
@@ -185,7 +185,7 @@ namespace lasd {
   Data BST<Data>::SuccessorNRemove(const Data& value){
     struct BSTNode* succ = Successor(&Root(), value);
     Data retValue = succ->Element();
-    Remove(*succ);
+    Remove(succ);
 
     return retValue;
   }
@@ -202,42 +202,43 @@ namespace lasd {
   }
 
 
+/* ************************************************************************ */
+
+
   template <typename Data>
-  void BST<Data>::Remove(struct BSTNode& del){
-    if(del.HasLeftChild() && del.HasRightChild()){
-      struct BSTNode* tmp = Successor(&Root(), del.Element());
+  void BST<Data>::Remove(struct BSTNode* del){
+    if(del->HasLeftChild() && del->HasRightChild()){
+      struct BSTNode* tmp = Min(del->Right());
       Data savedValue = tmp->Element();
 
-      Remove(*tmp);
-      del.Element() = savedValue;
+      Remove(tmp);
+      del->Element() = savedValue;
     }else{
-      struct BSTNode* parent = SearchParent(&Root(), del.Element());
+      struct BSTNode* parent = SearchParent(&Root(), del->Element());
 
-      if(del.IsLeaf()){
+      if(del->IsLeaf()){
         if(parent == nullptr)
           BinaryTreeLnk<Data>::Clear();
-        else if(parent->HasLeftChild() && parent->left->Element() == del.Element())
+        else if(parent->HasLeftChild() && parent->left->Element() == del->Element())
           BinaryTreeLnk<Data>::RemoveLeftChild(*parent);
-        else if(parent->HasRightChild() && parent->right->Element() == del.Element())
+        else if(parent->HasRightChild() && parent->right->Element() == del->Element())
           BinaryTreeLnk<Data>::RemoveRightChild(*parent);
-      }else if(del.HasLeftChild() ^ del.HasRightChild()){
+      }else if(del->HasLeftChild() ^ del->HasRightChild()){
         if(parent == nullptr){
-          if(del.HasLeftChild()){
-            Data newValue = del.Left()->Element();
-            Remove(*del.Left());
-            del.Element() = newValue;
+          if(del->HasLeftChild()){
+            root = del->Left();
+            delete del;
           }else{
-            Data newValue = del.Right()->Element();
-            Remove(*del.Right());
-            del.Element() = newValue;
+            root = del->Right();
+            delete del;
           }
-        }else if(parent->HasLeftChild() && parent->left->Element() == del.Element()){
-          if(del.HasLeftChild())
+        }else if(parent->HasLeftChild() && parent->left->Element() == del->Element()){
+          if(del->HasLeftChild())
             parent->left = SkipOnLeft(parent->Left());
           else
             parent->left = SkipOnRight(parent->Left());
-        }else if(parent->HasRightChild() && parent->right->Element() == del.Element()){
-          if(del.HasLeftChild())
+        }else if(parent->HasRightChild() && parent->right->Element() == del->Element()){
+          if(del->HasLeftChild())
             parent->right = SkipOnLeft(parent->Right());
           else
             parent->right = SkipOnRight(parent->Right());
@@ -245,6 +246,7 @@ namespace lasd {
       }
     }
   }
+
 
   template <typename Data>
   struct BST<Data>::BSTNode* BST<Data>::SkipOnLeft(struct BSTNode* node){
@@ -266,127 +268,6 @@ namespace lasd {
     return Right;
   }
 
-/* ************************************************************************** */
-
-  template <typename Data>
-  QueueLst<Data>* BST<Data>::enqueueTreeInOrder() const{
-    QueueLst<Data>* Q1 = new QueueLst<Data>();
-
-    InOrderEnqueueTree(Q1, &Root());
-
-    return Q1;
-  }
-
-    template <typename Data>
-    void BST<Data>::InOrderEnqueueTree(QueueLst<Data>* Q, struct BSTNode* node) const{
-      if(node == nullptr)
-        return;
-
-      if(node->HasLeftChild())
-        InOrderEnqueueTree(Q, node->Left());
-
-      Q->Enqueue(node->Element());
-
-      if(node->HasRightChild())
-        InOrderEnqueueTree(Q, node->Right());
-    }
-
-  template <typename Data>
-  struct BST<Data>::BSTNode* BST<Data>::Min(struct BSTNode* node) const{
-    while(node->Left() != nullptr)
-        node = node->Left();
-
-    return node;
-  }
-
-  template <typename Data>
-  struct BST<Data>::BSTNode* BST<Data>::Max(struct BSTNode* node) const{
-    while(node->Right() != nullptr)
-        node = node->Right();
-
-    return node;
-  }
-
-  template <typename Data>
-  struct BST<Data>::BSTNode* BST<Data>::Predecessor(struct BSTNode* node, const Data& value) const{
-    struct BSTNode* ret = Predecessor_IT(node, value, nullptr);
-    if(ret == nullptr)
-      throw std::length_error("Predecessor does not Exists!");
-
-    return ret;
-  }
-
-    template <typename Data>
-    struct BST<Data>::BSTNode* BST<Data>::Predecessor_IT(struct BSTNode* node, const Data& value, struct BSTNode* candidate) const noexcept{
-      struct BSTNode* ret = candidate;
-      if(node != nullptr)
-        if(node->Element() == value){
-          if(node->Left() != nullptr)
-            ret = Max(node->Left());
-        }else{
-          if(value > node->Element())
-            ret = Predecessor_IT(node->Right(), value, node);
-          else if(value < node->Element())
-            ret = Predecessor_IT(node->Left(), value, candidate);
-        }
-
-      return ret;
-    }
-
-  template <typename Data>
-  struct BST<Data>::BSTNode* BST<Data>::Successor(struct BSTNode* node, const Data& value) const{
-    struct BSTNode* ret = Successor_IT(node, value, nullptr);
-    if(ret == nullptr)
-      throw std::length_error("Successor does not Exists!");
-
-    return ret;
-  }
-
-    template <typename Data>
-    struct BST<Data>::BSTNode* BST<Data>::Successor_IT(struct BSTNode* node, const Data& value, struct BSTNode* candidate) const noexcept{
-      struct BSTNode* ret = candidate;
-      if(node != nullptr)
-        if(node->Element() == value){
-          if(node->Right() != nullptr)
-            ret = Min(node->Right());
-        }else{
-          if(value > node->Element())
-            ret = Successor_IT(node->Right(), value, ret);
-          else if(value < node->Element())
-            ret = Successor_IT(node->Left(), value, node);
-        }
-
-      return ret;
-    }
-
-
-  template <typename Data>
-  struct BST<Data>::BSTNode* BST<Data>::InsertNode(struct BSTNode* node, const Data& copyValue){
-    if(node == nullptr)
-      node = new struct BSTNode(copyValue);
-    else{
-      if(copyValue < node->Element())
-        node->left = InsertNode(node->Left(), copyValue);
-      else if(copyValue > node->Element())
-        node->right = InsertNode(node->Right(), copyValue);
-    }
-
-    return node;
-  }
-
-  template <typename Data>
-  struct BST<Data>::BSTNode* BST<Data>::InsertNode(struct BSTNode* node, Data&& moveValue){
-    if(node == nullptr)
-      node = new struct BSTNode(std::move(moveValue));
-    else{
-      if(moveValue < node->Element())
-        node->left = InsertNode(node->Left(), std::move(moveValue));
-      else if(moveValue > node->Element())
-        node->right = InsertNode(node->Right(), std::move(moveValue));
-    }
-
-    return node;
-  }
 
   template <typename Data>
   struct BST<Data>::BSTNode* BST<Data>::Search(struct BSTNode* node, const Data& value) const noexcept{
@@ -421,6 +302,131 @@ namespace lasd {
       }
 
     return nullptr;
+  }
+
+
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::Min(struct BSTNode* node) const{
+    while(node->Left() != nullptr)
+        node = node->Left();
+
+    return node;
+  }
+
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::Max(struct BSTNode* node) const{
+    while(node->Right() != nullptr)
+        node = node->Right();
+
+    return node;
+  }
+
+
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::Predecessor(struct BSTNode* node, const Data& value) const{
+    struct BSTNode* ret = Predecessor_IT(node, value, nullptr);
+    if(ret == nullptr)
+      throw std::length_error("Predecessor does not Exists!");
+
+    return ret;
+  }
+
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::Successor(struct BSTNode* node, const Data& value) const{
+    struct BSTNode* ret = Successor_IT(node, value, nullptr);
+    if(ret == nullptr)
+      throw std::length_error("Successor does not Exists!");
+
+    return ret;
+  }
+
+/* ************************************************************************** */
+
+  template <typename Data>
+  QueueVec<Data>* BST<Data>::enqueueTreeInOrder() const{
+    QueueVec<Data>* Q1 = new QueueVec<Data>();
+
+    InOrderEnqueueTree(Q1, &Root());
+
+    return Q1;
+  }
+
+    template <typename Data>
+    void BST<Data>::InOrderEnqueueTree(QueueVec<Data>* Q, struct BSTNode* node) const{
+      if(node == nullptr)
+        return;
+
+      if(node->HasLeftChild())
+        InOrderEnqueueTree(Q, node->Left());
+
+      Q->Enqueue(node->Element());
+
+      if(node->HasRightChild())
+        InOrderEnqueueTree(Q, node->Right());
+    }
+
+
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::Predecessor_IT(struct BSTNode* node, const Data& value, struct BSTNode* candidate) const noexcept{
+    struct BSTNode* ret = candidate;
+    if(node != nullptr)
+      if(node->Element() == value){
+        if(node->Left() != nullptr)
+          ret = Max(node->Left());
+      }else{
+        if(value > node->Element())
+          ret = Predecessor_IT(node->Right(), value, node);
+        else if(value < node->Element())
+          ret = Predecessor_IT(node->Left(), value, candidate);
+      }
+
+    return ret;
+  }
+
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::Successor_IT(struct BSTNode* node, const Data& value, struct BSTNode* candidate) const noexcept{
+    struct BSTNode* ret = candidate;
+    if(node != nullptr)
+      if(node->Element() == value){
+        if(node->Right() != nullptr)
+          ret = Min(node->Right());
+      }else{
+        if(value > node->Element())
+          ret = Successor_IT(node->Right(), value, ret);
+        else if(value < node->Element())
+          ret = Successor_IT(node->Left(), value, node);
+      }
+
+    return ret;
+  }
+
+
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::InsertNode(struct BSTNode* node, const Data& copyValue){
+    if(node == nullptr)
+      node = new struct BSTNode(copyValue);
+    else{
+      if(copyValue < node->Element())
+        node->left = InsertNode(node->Left(), copyValue);
+      else if(copyValue > node->Element())
+        node->right = InsertNode(node->Right(), copyValue);
+    }
+
+    return node;
+  }
+
+  template <typename Data>
+  struct BST<Data>::BSTNode* BST<Data>::InsertNode(struct BSTNode* node, Data&& moveValue){
+    if(node == nullptr)
+      node = new struct BSTNode(std::move(moveValue));
+    else{
+      if(moveValue < node->Element())
+        node->left = InsertNode(node->Left(), std::move(moveValue));
+      else if(moveValue > node->Element())
+        node->right = InsertNode(node->Right(), std::move(moveValue));
+    }
+
+    return node;
   }
 
 }
