@@ -109,7 +109,7 @@ namespace lasd {
 
   template <typename Data>
   void BST<Data>::Remove(const Data& value){
-    struct BSTNode* del = Search(&Root(), value);
+    struct BSTNode* del = Search(static_cast<struct BSTNode*>(root), value);
 
     if(del != nullptr)
       Remove(del);

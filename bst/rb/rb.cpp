@@ -100,7 +100,7 @@ namespace lasd {
 
   template <typename Data>
   void RB<Data>::Remove(const Data& value){
-    root = Remove(&Root(), value);
+    root = Remove(static_cast<struct RBNode*>(root), value);
     if(root)
       Root().color = black;
   }
@@ -370,14 +370,14 @@ namespace lasd {
   template <typename Data>
   int RB<Data>::removeViolationTypeL(struct RB<Data>::RBNode* nodeL, struct RB<Data>::RBNode* nodeR){
     int violation = 0;
-    if(nodeL && nodeL->color == dblack){
-      if(nodeR && nodeR->color == red)
+    if(nodeL && nodeL->color == dblack && nodeR){
+      if(nodeR->color == red)
         violation = 1;
-      else if(nodeR && (nodeR->HasRightChild() && nodeR->Right()->color == black) && (nodeR->HasLeftChild() && nodeR->Left()->color == black))
+      else if((nodeR->HasRightChild() && nodeR->Right()->color == black) && (nodeR->HasLeftChild() && nodeR->Left()->color == black))
         violation = 2;
-      else if(nodeR && (nodeR->HasLeftChild() && nodeR->Left()->color == red))
+      else if((nodeR->HasLeftChild() && nodeR->Left()->color == red))
         violation = 3;
-      else if(nodeR && (nodeR->HasRightChild() && nodeR->Right()->color == red))
+      else if((nodeR->HasRightChild() && nodeR->Right()->color == red))
         violation = 4;
       else
         violation = 5;
@@ -390,14 +390,14 @@ namespace lasd {
   template <typename Data>
   int RB<Data>::removeViolationTypeR(struct RB<Data>::RBNode* nodeL, struct RB<Data>::RBNode* nodeR){
     int violation = 0;
-    if(nodeR && nodeR->color == dblack){
-      if(nodeL && nodeL->color == red)
+    if(nodeR && nodeR->color == dblack && nodeL){
+      if(nodeL->color == red)
         violation = 1;
-      else if(nodeL && (nodeL->HasRightChild() && nodeL->Right()->color == black) && (nodeL->HasLeftChild() && nodeL->Left()->color == black))
+      else if((nodeL->HasRightChild() && nodeL->Right()->color == black) && (nodeL->HasLeftChild() && nodeL->Left()->color == black))
         violation = 2;
-      else if(nodeL && (nodeL->HasRightChild() && nodeL->Right()->color == red))
+      else if((nodeL->HasRightChild() && nodeL->Right()->color == red))
         violation = 3;
-      else if(nodeL && (nodeL->HasLeftChild() && nodeL->Left()->color == red))
+      else if((nodeL->HasLeftChild() && nodeL->Left()->color == red))
         violation = 4;
       else
         violation = 5;

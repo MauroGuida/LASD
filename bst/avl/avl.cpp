@@ -89,7 +89,7 @@ namespace lasd {
 
   template <typename Data>
   void AVL<Data>::Remove(const Data& value){
-    root = Remove(&Root(), value);
+    root = Remove(static_cast<struct AVLNode*>(root), value);
   }
 
   template <typename Data>
