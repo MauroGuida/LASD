@@ -105,29 +105,29 @@ public:
   /* ************************************************************************ */
 
   // DA RIMUOVERE!
-  void stampaInOrder(struct RBNode* node){
-    if(node == nullptr)
-      return;
-
-    stampaInOrder(node->Left());
-    std::cout << "Value: " << node->Element() << " Color: " << node->color << std::endl;
-    stampaInOrder(node->Right());
-  }
-
-  void printRB(){
-        printRB("", static_cast<struct RBNode*>(root),false);
-    }
-
-  void printRB(const std::string& prefix,struct RBNode* root, bool isLeft){
-    if(root != nullptr){
-      std::cout << prefix;
-      std::cout << (isLeft ? "├──" : "└──" );
-      std::cout << root->Element() << (root->color == Color::black ? "(B)" : "(R)") << std::endl;
-
-      printRB( prefix + (isLeft ? "│   " : "    "), root->Left(), true);
-      printRB( prefix + (isLeft ? "│   " : "    "), root->Right(), false);
-    }
-  }
+  // void stampaInOrder(struct RBNode* node){
+  //   if(node == nullptr)
+  //     return;
+  //
+  //   stampaInOrder(node->Left());
+  //   std::cout << "Value: " << node->Element() << " Color: " << node->color << std::endl;
+  //   stampaInOrder(node->Right());
+  // }
+  //
+  // void printRB(){
+  //       printRB("", static_cast<struct RBNode*>(root),false);
+  //   }
+  //
+  // void printRB(const std::string& prefix,struct RBNode* root, bool isLeft){
+  //   if(root != nullptr){
+  //     std::cout << prefix;
+  //     std::cout << (isLeft ? "├──" : "└──" );
+  //     std::cout << root->Element() << (root->color == Color::black ? "(B)" : "(R)") << std::endl;
+  //
+  //     printRB( prefix + (isLeft ? "│   " : "    "), root->Left(), true);
+  //     printRB( prefix + (isLeft ? "│   " : "    "), root->Right(), false);
+  //   }
+  // }
 
 private:
 

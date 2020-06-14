@@ -40,13 +40,16 @@ namespace lasd {
 // Copy assignment
   template <typename Data>
   BST<Data>& BST<Data>::operator=(const BST<Data>& copyFrom){
-    return BinaryTreeLnk<Data>::operator=(copyFrom);
+    BinaryTreeLnk<Data>::Clear();
+    BinaryTreeLnk<Data>::operator=(copyFrom);
+    return *this;
   }
 
 // Move assignment
   template <typename Data>
   BST<Data>& BST<Data>::operator=(BST<Data>&& moveFrom) noexcept{
-    return BinaryTreeLnk<Data>::operator=(std::move(moveFrom));
+    BinaryTreeLnk<Data>::operator=(std::move(moveFrom));
+    return *this;
   }
 
 // Comparison operators
@@ -97,13 +100,11 @@ namespace lasd {
   template <typename Data>
   void BST<Data>::Insert(const Data& copyValue){
     root = InsertNode(static_cast<struct BSTNode*>(root), copyValue);
-    size++;
   }
 
   template <typename Data>
   void BST<Data>::Insert(Data&& moveValue){
     root = InsertNode(static_cast<struct BSTNode*>(root), std::move(moveValue));
-    size++;
   }
 
 
@@ -243,6 +244,7 @@ namespace lasd {
           else
             parent->right = SkipOnRight(parent->Right());
         }
+        size--;
       }
     }
   }
@@ -253,7 +255,7 @@ namespace lasd {
     struct BSTNode* Left = static_cast<struct BSTNode*>(node->left);
 
     delete node;
-    size--;
+    // size--;
 
     return Left;
   }
@@ -263,7 +265,7 @@ namespace lasd {
     struct BSTNode* Right = static_cast<struct BSTNode*>(node->right);
 
     delete node;
-    size--;
+    // size--;
 
     return Right;
   }
@@ -346,7 +348,7 @@ namespace lasd {
   QueueVec<Data>* BST<Data>::enqueueTreeInOrder() const{
     QueueVec<Data>* Q1 = new QueueVec<Data>();
 
-    InOrderEnqueueTree(Q1, &Root());
+    InOrderEnqueueTree(Q1, static_cast<struct BSTNode*>(root));
 
     return Q1;
   }
@@ -403,9 +405,10 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::BSTNode* BST<Data>::InsertNode(struct BSTNode* node, const Data& copyValue){
-    if(node == nullptr)
+    if(node == nullptr){
       node = new struct BSTNode(copyValue);
-    else{
+      size++;
+    }else{
       if(copyValue < node->Element())
         node->left = InsertNode(node->Left(), copyValue);
       else if(copyValue > node->Element())
@@ -417,9 +420,10 @@ namespace lasd {
 
   template <typename Data>
   struct BST<Data>::BSTNode* BST<Data>::InsertNode(struct BSTNode* node, Data&& moveValue){
-    if(node == nullptr)
+    if(node == nullptr){
       node = new struct BSTNode(std::move(moveValue));
-    else{
+      size++;
+    }else{
       if(moveValue < node->Element())
         node->left = InsertNode(node->Left(), std::move(moveValue));
       else if(moveValue > node->Element())

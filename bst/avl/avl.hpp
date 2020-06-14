@@ -105,7 +105,7 @@ public:
 
 private:
 
-  struct AVLNode* DetachMin(struct AVLNode*, struct AVLNode*);
+  // struct AVLNode* DetachMin(struct AVLNode*, struct AVLNode*);
 
   struct AVLNode* Remove(struct AVLNode*, const Data&);
 

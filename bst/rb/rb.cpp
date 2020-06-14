@@ -36,7 +36,7 @@ namespace lasd {
 
   // Move constructor
   template <typename Data>
-  RB<Data>::RB(RB&& moveFrom) noexcept : BinaryTreeLnk<Data>::BinaryTreeLnk(moveFrom){
+  RB<Data>::RB(RB&& moveFrom) noexcept : BinaryTreeLnk<Data>::BinaryTreeLnk(std::move(moveFrom)){
 
   }
 
@@ -54,7 +54,8 @@ namespace lasd {
   // Move assignment
   template <typename Data>
   RB<Data>& RB<Data>::operator=(RB<Data>&& moveFrom) noexcept{
-    return BinaryTreeLnk<Data>::operator=(std::move(moveFrom));
+    BinaryTreeLnk<Data>::operator=(std::move(moveFrom));
+    return *this;
   }
 
 
@@ -383,7 +384,6 @@ namespace lasd {
         violation = 5;
     }
 
-    std::cout << "Violazione L: " << violation << std::endl;
     return violation;
   }
 
@@ -403,7 +403,6 @@ namespace lasd {
         violation = 5;
     }
 
-    std::cout << "Violazione R: " << violation << std::endl;
     return violation;
   }
 
@@ -639,8 +638,6 @@ namespace lasd {
     void RB<Data>::propagateBlack(struct RB<Data>::RBNode* node){
       if(!node)
         return;
-
-      std::cout << "Doppio nero: " << node->Element() << std::endl;
 
       if(node->color == red)
         node->color = black;

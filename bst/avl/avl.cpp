@@ -48,7 +48,8 @@ namespace lasd {
 // Move assignment
   template <typename Data>
   AVL<Data>& AVL<Data>::operator=(AVL<Data>&& moveFrom) noexcept{
-    return BinaryTreeLnk<Data>::operator=(std::move(moveFrom));
+    BinaryTreeLnk<Data>::operator=(std::move(moveFrom));
+    return *this;
   }
 
 
@@ -89,6 +90,7 @@ namespace lasd {
 
   template <typename Data>
   void AVL<Data>::Remove(const Data& value){
+    // if(BST<Data>::Search(static_cast<struct AVLNode*>(root), value));
     root = Remove(static_cast<struct AVLNode*>(root), value);
   }
 
@@ -147,28 +149,29 @@ namespace lasd {
 
 /* ************************************************************************** */
 
-  template <typename Data>
-  struct AVL<Data>::AVLNode* AVL<Data>::DetachMin(struct AVL<Data>::AVLNode* node, struct AVL<Data>::AVLNode* parent){
-    struct AVLNode* ret = nullptr;
-    struct AVLNode* newNode = nullptr;
-
-    if(node != nullptr){
-      if(node->Left() != nullptr){
-        ret = DetachMin(node->Left(), node);
-        node = BalanceR(node);
-      }else{
-        ret = node;
-        newNode = node->Right();
-      }
-    }
-
-    if(node == parent->Left())
-      parent->left = newNode;
-    else
-      parent->right = newNode;
-
-    return ret;
-  }
+  // template <typename Data>
+  // struct AVL<Data>::AVLNode* AVL<Data>::DetachMin(struct AVL<Data>::AVLNode* node, struct AVL<Data>::AVLNode* parent){
+  //   struct AVLNode* ret = nullptr;
+  //   struct AVLNode* newNode = nullptr;
+  //
+  //   if(node != nullptr){
+  //     if(node->Left() != nullptr){
+  //       ret = DetachMin(node->Left(), node);
+  //       node = BalanceR(node);
+  //     }else{
+  //       ret = node;
+  //       newNode = node->Right();
+  //       size--;
+  //     }
+  //   }
+  //
+  //   if(node == parent->Left())
+  //     parent->left = newNode;
+  //   else
+  //     parent->right = newNode;
+  //
+  //   return ret;
+  // }
 
   template <typename Data>
   struct AVL<Data>::AVLNode* AVL<Data>::Remove(struct AVL<Data>::AVLNode* node, const Data& value){
@@ -193,19 +196,17 @@ namespace lasd {
         BST<Data>::Remove(node);
         return tmp;
       }else{
-        struct AVLNode* tmp = DetachMin(node->Right(), node);
-        std::swap(node->Element(), tmp->Element());
-        node = BalanceL(node);
-        delete tmp;
+        // struct AVLNode* tmp = DetachMin(node->Right(), node);
+        // std::swap(node->Element(), tmp->Element());
+        // node = BalanceL(node);
+        // delete tmp;
 
-        size--;
+        Data tmp = BST<Data>::Min(static_cast<struct BST<Data>::BSTNode*>(node->right))->Element();
 
-        // Data tmp = BST<Data>::Min(static_cast<struct BST<Data>::BSTNode*>(node->right))->Element();
-        //
-        // struct AVLNode* oldNode = node;
-        // node = Remove(node, tmp);
-        //
-        // std::swap(oldNode->Element(), tmp);
+        struct AVLNode* oldNode = node;
+        node = Remove(node, tmp);
+
+        std::swap(oldNode->Element(), tmp);
       }
     }
 
