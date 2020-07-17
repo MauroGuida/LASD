@@ -144,7 +144,7 @@
   void QueueVec<Data>::Clear(){
     Vector<Data>::Clear();
 
-    delete[] Elements;
+    delete[] Elements; //Inutile?
     Elements = new Data[2];
     size = 2;
 
@@ -165,7 +165,7 @@
       head = 0;
       tail = lenght;
       size = newSize;
-      
+
       std::swap(newVec, Elements);
       delete[] newVec;
     }
