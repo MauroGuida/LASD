@@ -575,13 +575,12 @@ namespace lasd {
         struct RBNode* ancestor = static_cast<struct RBNode*>(BST<Data>::SearchParent(&Root(), node->Element()));
         tmp = node;
 
-        if(ancestor && (ancestor->HasLeftChild() ^ ancestor->HasRightChild())/* &&
-            (ancestor->Left() == node || ancestor->Right() == node)*/)
+        if(ancestor && (ancestor->HasLeftChild() ^ ancestor->HasRightChild()))
           propagateBlack(ancestor);
 
         node = nullptr;
         delete tmp;
-      }else if(!node->Left() || !node->Right()){
+      }else if(!node->Left() || !node->Right()){ //Node has 1 Child or is a Red Leaf
         tmp = node;
 
         if(!node->Left())
@@ -593,7 +592,7 @@ namespace lasd {
           propagateBlack(node);
 
         delete tmp;
-      }else{
+      }else{ //Node has 2 Childs
         tmp = DetachMin(node->Right(), node);
         node->Element() = tmp->Element();
         node = removeBalanceR(node);
