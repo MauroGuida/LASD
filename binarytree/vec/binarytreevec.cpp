@@ -215,8 +215,8 @@
     size = copyTree.size;
 
     treeVec.Resize(copyTree.treeVec.Size());
-    for(ulong i = 0; i < treeVec.Size(); i++)
-      treeVec[i] = nullptr;
+    // for(ulong i = 0; i < treeVec.Size(); i++)
+    //   treeVec[i] = nullptr;
 
     for(ulong i = 0; i < copyTree.treeVec.Size(); i++)
       if(copyTree.treeVec[i] != nullptr){
@@ -230,6 +230,8 @@
         // treeVec[i]->right = copyTree.treeVec[i]->right;
         //
         // treeVec[i]->refTree = this;
+      }else{
+        treeVec[i] = nullptr;
       }
 
     for(int i = 0; i < 100; i++)
@@ -268,8 +270,8 @@
     size = copyTree.size;
 
     treeVec.Resize(copyTree.treeVec.Size());
-    for(ulong i = 0; i < treeVec.Size(); i++)
-      treeVec[i] = nullptr;
+    // for(ulong i = 0; i < treeVec.Size(); i++)
+    //   treeVec[i] = nullptr;
 
     for(ulong i = 0; i < copyTree.treeVec.Size(); i++)
       if(copyTree.treeVec[i] != nullptr){
@@ -283,6 +285,8 @@
         // treeVec[i]->right = copyTree.treeVec[i]->right;
         //
         // treeVec[i]->refTree = this;
+      }else{
+        treeVec[i] = nullptr;
       }
 
     for(int i = 0; i < 100; i++)
